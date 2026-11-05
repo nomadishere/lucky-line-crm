@@ -104,3 +104,11 @@ html.daymode #clsheet .pn{background:rgba(255,255,255,.98);border-color:rgba(15,
 .clvchips{display:flex;gap:6px;overflow-x:auto;padding:6px 0;flex:none;scrollbar-width:none}.clvchips::-webkit-scrollbar{display:none}
 .clvchips .b{flex:none;white-space:nowrap}
 .clvin{display:flex;gap:8px;flex:none;padding-top:6px}.clvin input{min-width:0;font-size:16px}
+
+#vidsheet{position:fixed;inset:0;z-index:98;display:none;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#vidsheet.on{display:flex;align-items:center;justify-content:center;padding:max(10px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom))}
+#vidsheet .pn{width:100%;max-width:520px;max-height:100%;display:flex;flex-direction:column;gap:8px;background:rgba(12,16,22,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:12px}
+#vidsheet .hd{display:flex;align-items:center;gap:10px}
+#vidsheet video{width:100%;flex:1 1 auto;min-height:0;max-height:calc(100dvh - 150px);object-fit:contain;background:#06080c;border-radius:14px;aspect-ratio:9/16}
+#vidsheet .s{text-align:center;color:var(--muted,#9aa59a)}
+html.daymode #vidsheet .pn{background:rgba(255,255,255,.98);border-color:rgba(15,23,42,.1)}
