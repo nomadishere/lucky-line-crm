@@ -396,9 +396,9 @@ function drawOrbs(d){const items=[];const t=now();
   $('#orbs').innerHTML=items.slice(0,14).map(i=>{const ms=i.ms;const lab=ms<0?ago(ms):ms<864e5?ago(ms):new Date(i.due).toLocaleDateString('en-US',{weekday:'short',timeZone:TZ}).toUpperCase();
     // clock ring: one lap = 60 min for a proposal (Alden rule), 24 h for everything else
     let fill=i.fill,c,size,glow,spd,late=ms<0,op=1;
-    if(!late){c=i.tier===1?'var(--orb-yellow)':'var(--orb-green)';size=44+fill*14;glow=4+fill*14;spd=0}
-    else if(r++===0){const h=-ms/36e5,k=Math.min(1,Math.log2(1+h/6)/3.2);c='var(--orb-red)';size=58+k*24;glow=12+k*18;spd=Math.max(.55,2-k*1.45)}
-    else{const n=r-1;const pct=Math.max(30,100-n*18);c=`color-mix(in srgb,var(--orb-red) ${pct}%,transparent)`;size=Math.max(44,56-n*3);glow=Math.max(2,9-n*2);spd=0;op=Math.max(.55,1-n*.12)}
+    if(!late){c=i.tier===1?'var(--orb-yellow)':'var(--orb-green)';size=52;glow=8;spd=0}
+    else if(r++===0){const h=-ms/36e5,k=Math.min(1,Math.log2(1+h/6)/3.2);c='var(--orb-red)';size=72+k*12;glow=16+k*14;spd=Math.max(.55,1.6-k*1.05)}
+    else{const n=r-1;const pct=Math.max(68,96-n*7);c=`color-mix(in srgb,var(--orb-red) ${pct}%,transparent)`;size=52;glow=Math.max(6,14-n*2);spd=0}
     const st=`--p:${(fill*100).toFixed(1)};--c:${c};--s:${size.toFixed(0)}px;--g:${glow.toFixed(0)}px;--spd:${spd}s`;
     return `<a class="orb clk${late?' late':''}${spd?' pulse':''}" href="${i.href}" style="opacity:${op}"><i style="${st}">${lab}</i><span>${esc(i.label)}</span></a>`}).join('')||'<div class="s" style="padding:6px 2px">Nothing urgent. Nice.</div>'}
 const Today=guard(async()=>{
