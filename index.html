@@ -296,6 +296,23 @@ html.daymode #aurora .a1{background:var(--glow1)!important}
 html.daymode .orbs .tick::before{background:#f4f8f6}
 html.daymode .orbs .tick .tbox{background:#fff}
 @media (prefers-reduced-motion:reduce){.orb.clk i,.orb.clk i::before,.orb.clk i::after{animation:none}}
+/* ---- cross-device fixes (Nov 5) ---- */
+/* url inputs were unstyled, so the link box spilled over the type picker */
+input[type=url]{width:100%;min-height:38px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.06);padding:8px 10px;outline:none;font-size:13px;color:var(--text)}
+html.daymode input[type=url]{background:#fff}
+/* iPhone zooms the whole page when you tap a box with text under 16px; stop that on phones and iPads */
+@media (pointer:coarse){input,select,textarea{font-size:16px!important}}
+/* urgency circles: whole circles snap into place, the right edge fades so a cut circle reads as "swipe for more" */
+.orbs{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);padding-right:30px}
+.orbs.end{-webkit-mask-image:none;mask-image:none}
+/* narrow phones (most Androids are 360-412 wide): tighter top bar so page titles are not cut off */
+@media (max-width:400px){.toprow{gap:6px}.toprow .ib{width:34px;height:34px}.vt{font-size:14px!important}}
+@media (max-width:370px){.toprow .ib{width:32px;height:32px}.toprow .ib svg{width:16px;height:16px}}
+/* iPads: four stat tiles in one row instead of 3 + 1 */
+@media (min-width:700px){.grid:has(> .stat:nth-child(4):last-child){grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* phones turned sideways: keep buttons clear of the notch */
+.top{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+main{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
 </style>
 </head>
 <body>
@@ -384,6 +401,8 @@ function go(){if(hosted&&!session){Login();return}const routes=Object.assign({to
   argR[v]?argR[v](arg):(routes[v]||Today)();
 }
 addEventListener('hashchange',go);
+addEventListener('keydown',e=>{if(e.key==='Escape'){window.closeText&&closeText();window.closeNotes&&closeNotes()}});
+(()=>{const o=document.getElementById('orbs');if(!o)return;const f=()=>o.classList.toggle('end',o.scrollLeft+o.clientWidth>=o.scrollWidth-4);o.addEventListener('scroll',f,{passive:true});new MutationObserver(f).observe(o,{childList:true});addEventListener('resize',f)})();
 
 function guard(fnc){return async(...a)=>{try{await fnc(...a)}catch(e){if(/Not a Juicy CRM team member/.test(e.message||'')){V.innerHTML=`<div class="card"><div class="t">This login is switched off</div><div class="s" style="margin-top:6px">You're signed in as ${esc(session&&session.email||'someone else')}. Sign out and sign in with your own login.</div><div class="btns"><button class="b p keep" onclick="signOut()">Sign out</button></div></div>`;status('Switched off');return}V.innerHTML=`<div class="card"><div class="t">Can't reach your database right now</div><div class="s" style="margin-top:6px">${esc(e.message==='offline'?'Open this page in Claude (signed in as Justin) so it can use your Supabase connection.':e.message)}</div><div class="btns"><button class="b p keep" onclick="go()">Try again</button></div></div>`;status('Offline')}}}
 
@@ -693,10 +712,10 @@ addEventListener('DOMContentLoaded',async()=>{
   $('#live').classList.toggle('off',!mcp);if(mcp){go();setTimeout(refreshOrbs,1500);setInterval(refreshOrbs,60000)}else status('Not connected: open in Claude to load your data')});
 if('serviceWorker' in navigator&&location.protocol==='https:'&&!window.claude)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
-<script src="x-core.js"></script>
-<script src="x-job.js"></script>
-<script src="x-voice.js"></script>
-<script src="x-stats.js"></script>
+<script src="x-core.js?v=20261105c"></script>
+<script src="x-job.js?v=20261105c"></script>
+<script src="x-voice.js?v=20261105c"></script>
+<script src="x-stats.js?v=20261105c"></script>
 <script>
 /* ---------- day / night ---------- */
 const SUN='<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/>',MOON='<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>';
