@@ -84,3 +84,4 @@ body.ro .sw,body.ro label.b,body.ro #micBtn,body.ro .acts .chip{display:none!imp
 #csheet .pn{width:100%;max-width:560px;max-height:86vh;overflow:auto;background:rgba(20,24,34,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px 22px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom))}
 html.daymode #csheet .pn{background:rgba(255,255,255,.98);border-color:rgba(15,23,42,.1)}
 html.daymode .prize{background:linear-gradient(135deg,rgba(15,157,99,.1),rgba(183,121,31,.08));border-color:rgba(15,157,99,.3)}
+body.ro #rfmBtn{display:none!important}
