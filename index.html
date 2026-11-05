@@ -13,6 +13,7 @@
 <meta name="apple-mobile-web-app-title" content="Lucky Line">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" href="icons/icon-192.png">
+<script>try{const m=localStorage.getItem('llcrm.theme')||'night';if(m==='day'||(m==='auto'&&matchMedia('(prefers-color-scheme: light)').matches))document.documentElement.classList.add('day')}catch(e){}</script>
 <link rel="stylesheet" href="x.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -219,6 +220,35 @@ body.ro textarea.fit{pointer-events:auto!important}
 body.ro .nav>div{grid-template-columns:repeat(4,1fr)}
 body.ro button.b.keep{display:inline-flex!important}
 .ro-note{display:none;font:600 11px Inter;color:var(--amber);margin:0 4px 10px}
+
+/* ===== Day mode (white background). Toggle: sun/moon button in the top bar. ===== */
+html.day{--bg:#f4f6f9;--panel:rgba(255,255,255,.82);--panel2:#fff;--border:rgba(15,23,42,.09);--border2:rgba(15,23,42,.16);--text:#0f1520;--muted:#5b6476;--faint:#8a93a5;--accent:#0f9d63;--accent-bg:rgba(15,157,99,.1);--red:#e11d48;--red-bg:rgba(225,29,72,.08);--amber:#b7791f;--amber-bg:rgba(183,121,31,.1);--green:#0f9d63;--green-bg:rgba(15,157,99,.1);color-scheme:light}
+html.day #aurora i{opacity:.16;filter:blur(90px)}
+html.day .top{background:linear-gradient(180deg,rgba(244,246,249,.94),rgba(244,246,249,.75))}
+html.day .card{box-shadow:0 1px 2px rgba(15,23,42,.05),0 6px 18px rgba(15,23,42,.05)}
+html.day .orb i{background:#fff;color:#0f1520}
+html.day .og i{border-color:#18b277;box-shadow:0 0 8px rgba(24,178,119,.3);color:#0d5c3e}
+html.day .oy i{border-color:#e0a12b;box-shadow:0 0 12px rgba(224,161,43,.45);color:#7a5206}
+html.day .or i,html.day .or2 i,html.day .orr i{color:#9f1239;background:#fff}
+html.day .or span,html.day .or2 span,html.day .orr span{color:#be123c}
+html.day .bar,html.day .risk{background:rgba(15,23,42,.08)}
+html.day .b{background:rgba(15,23,42,.05)}
+html.day .b.p,html.day .chip.on,html.day .day.on{background:#0f1520;border-color:#0f1520;color:#fff}
+html.day .day.on b{color:#fff}
+html.day .chk{border-color:rgba(15,23,42,.3)}
+html.day .nav>div{background:rgba(255,255,255,.85);border-color:rgba(15,23,42,.1);box-shadow:0 10px 30px rgba(15,23,42,.14)}
+html.day .nav a.on{color:#0f1520}
+html.day .nav a.plus{background:#0f1520;color:#fff;box-shadow:0 6px 18px rgba(15,23,42,.25)}
+html.day input[type=text],html.day input[type=tel],html.day input[type=email],html.day input[type=number],html.day input[type=search],html.day input[type=date],html.day input[type=password],html.day select,html.day textarea{background:#fff}
+html.day .alarm{background:linear-gradient(135deg,rgba(225,29,72,.12),rgba(225,29,72,.04));border-color:rgba(225,29,72,.35)}
+html.day .alarm .big{color:#9f1239}html.day .alarm .sub{color:#be123c}
+html.day .late2{background:rgba(225,29,72,.06)!important}html.day .late3{background:rgba(225,29,72,.1)!important}
+html.day #nsheet .pn,html.day #nsheet .hd,html.day #tsheet .pn{background:rgba(255,255,255,.98);border-color:rgba(15,23,42,.1)}
+html.day .fitw.more:after{background:rgba(255,255,255,.95)}
+html.day .clock{color:#0f1520}
+html.day .hello{color:#0f1520}
+.ib.thm svg{width:17px;height:17px}
+@media (max-width:400px){#clockTop{display:none!important}}
 </style>
 </head>
 <body>
@@ -226,7 +256,7 @@ body.ro button.b.keep{display:inline-flex!important}
 <div class="top" id="top"><div class="toprow">
  <a class="ib" id="backBtn" href="#today" aria-label="Back" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></a>
  <div class="brand"><span class="dot off" id="live"></span><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="LG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b8ff5a"/><stop offset="1" stop-color="#2fd38a"/></linearGradient></defs><g fill="url(#LG)"><circle cx="11" cy="11" r="6"/><circle cx="21" cy="11" r="6"/><circle cx="11" cy="20" r="6"/><circle cx="21" cy="20" r="6"/></g><path d="M16 16c1 5 3 9 6 13" stroke="url(#LG)" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M16 9.5v13M9.5 16h13" stroke="#06080c" stroke-width="1.6"/></svg><span id="title"></span></div><span class="mono" id="clockTop" style="font-size:10.5px;color:var(--muted);letter-spacing:.06em"></span>
- <button class="ib" id="signout" aria-label="Sign out" style="display:none" onclick="signOut()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11"/></svg></button><button class="ib" id="micBtn" aria-label="Voice command" onclick="startVoice()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button><a class="ib" href="#search" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
+ <button class="ib" id="signout" aria-label="Sign out" style="display:none" onclick="signOut()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11"/></svg></button><button class="ib thm" id="thmBtn" aria-label="Switch day or night" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><g id="thmIco"></g></svg></button><button class="ib" id="micBtn" aria-label="Voice command" onclick="startVoice()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button><a class="ib" href="#search" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
  </div><div class="status" id="status">Connecting…</div><div class="orbs" id="orbs" aria-label="Most urgent"></div></div>
 <div id="scroll"><main><div class="ro-note">View only. Ask Justin to make changes.</div><div id="view"></div></main></div>
 <nav class="nav"><div>
@@ -586,5 +616,12 @@ if('serviceWorker' in navigator&&location.protocol==='https:'&&!window.claude)na
 <script src="x-core.js"></script>
 <script src="x-job.js"></script>
 <script src="x-voice.js"></script>
+<script>
+/* ---------- day / night ---------- */
+const SUN='<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/>',MOON='<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>';
+function paintTheme(){const d=document.documentElement.classList.contains('day');const g=document.getElementById('thmIco');if(g)g.innerHTML=d?MOON:SUN;const b=document.getElementById('thmBtn');if(b)b.setAttribute('aria-label',d?'Switch to night mode':'Switch to day mode');const m=document.querySelector('meta[name=theme-color]');if(m)m.content=d?'#f4f6f9':'#0a0b12'}
+window.toggleTheme=()=>{const d=!document.documentElement.classList.contains('day');document.documentElement.classList.toggle('day',d);try{localStorage.setItem('llcrm.theme',d?'day':'night')}catch(e){}paintTheme()};
+paintTheme();
+</script>
 </body>
 </html>
