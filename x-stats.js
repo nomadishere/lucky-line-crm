@@ -17,7 +17,7 @@ function prizeHTML(){return `<div class="prize"><div class="k">🏆 Contest</div
 /* first sign-in: invite everyone into the contest */
 function contestInvite(s){try{if(!s||s.me_on_board||localStorage.getItem('llcrm.contestAsked'))return}catch(e){return}
   let d=$('#csheet');if(!d){d=document.createElement('div');d.id='csheet';document.body.appendChild(d)}
-  d.innerHTML=`<div class="pn" role="dialog" aria-modal="true" aria-label="Join the contest"><div class="coach" style="background:none;border:0;padding:0"><img class="mascot" src="img/clvr.svg" alt="" width="84" height="98"><div class="bubble"><div class="k">Clvr says</div><div class="t">Want in on the contest?</div><div class="s" style="color:var(--text);margin-top:4px">Join the leaderboard and race the team: tasks done, proposals sent, and proposals out within 60 minutes.</div></div></div>${prizeHTML()}
+  d.innerHTML=`<div class="pn" role="dialog" aria-modal="true" aria-label="Join the contest"><div class="coach" style="background:none;border:0;padding:0"><img class="mascot" src="img/clvr.svg?v=matte1" alt="" width="84" height="98"><div class="bubble"><div class="k">Clvr says</div><div class="t">Want in on the contest?</div><div class="s" style="color:var(--text);margin-top:4px">Join the leaderboard and race the team: tasks done, proposals sent, and proposals out within 60 minutes.</div></div></div>${prizeHTML()}
    <div class="btns"><button class="b p f keep" onclick="contestAnswer(true)">Join the contest</button><button class="b f keep" onclick="contestAnswer(false)">Not now</button></div></div>`;
   d.classList.add('on')}
 window.contestAnswer=async on=>{try{localStorage.setItem('llcrm.contestAsked','1')}catch(e){}const d=$('#csheet');if(d)d.classList.remove('on');if(on){try{await sql(`select crm.set_leaderboard(true) as ok`);cache.stats=null;status('You are in the contest ✓');if(location.hash==='#stats')Stats()}catch(e){status('Could not join: '+e.message)}}};
@@ -33,7 +33,7 @@ const Stats=guard(async()=>{status('Crunching…');const s=await loadStats(true)
   const net=(+s.saved_min||0)-(+s.behind_min||0),mins=s.minutes||{};const board=(s.board||[]).map(b=>({...b,score:(+b.done||0)+3*(+b.sent||0)+5*(+b.ontime||0)})).sort((a,b)=>b.score-a.score);
   const lib=Array.isArray(s.training)?s.training:[];
   const T=tips(s);window._tips=T;window._tipI=0;const feat=lib.find(x=>x.featured)||lib.find(x=>/video/i.test(x.kind||''));
-  V.innerHTML=`${cloverBtnHTML()}<div class="card coach"><img class="mascot" src="img/clvr.svg" alt="Clvr, the four-leaf clover sales coach" width="96" height="112">
+  V.innerHTML=`${cloverBtnHTML()}<div class="card coach"><img class="mascot" src="img/clvr.svg?v=matte1" alt="Clvr, the four-leaf clover sales coach" width="96" height="112">
    <div class="bubble"><div class="k">Clvr says</div><div class="t" id="tipH">${esc(T[0].h)}</div><div class="s" id="tipB" style="color:var(--text);margin-top:4px">${esc(T[0].b)}</div>
    ${T.length>1?`<button class="b sm keep" style="margin-top:8px" onclick="nextTip()">Next tip ›</button>`:''}</div></div>
   ${feat?`<a class="card feat" href="${esc(feat.url)}" target="_blank" rel="noopener"><span class="play" aria-hidden="true">▶</span><div class="grow"><div class="k">Start here</div><div class="t">${esc(feat.title)}</div><div class="s">${esc(feat.kind||'Video')} · opens in Google Drive</div></div></a>`:''}
@@ -65,9 +65,9 @@ Object.assign(window.XROUTES,{stats:Stats});Object.assign(window.XTITLES||(windo
    from the same live stats, no AI cost. */
 const CLV_Q=['How can I close more deals?','Help me manage my time better','What should I do first today?','How do I handle "I need to think about it"?','How do I get proposals out within 60 minutes?'];
 let clvLog=[];
-function cloverBtnHTML(){return `<button class="clvbtn keep" onclick="openClover()" aria-label="Click to talk to Clover"><span class="clvcoin"><img src="img/clvr.svg" alt="" width="56" height="65"></span><span class="clvtx"><b>Click to talk to Clover</b><small>Your sales coach. Ask anything.</small></span></button>`}
+function cloverBtnHTML(){return `<button class="clvbtn keep" onclick="openClover()" aria-label="Click to talk to Clover"><span class="clvcoin"><img src="img/clvr.svg?v=matte1" alt="" width="56" height="65"></span><span class="clvtx"><b>Click to talk to Clover</b><small>Your sales coach. Ask anything.</small></span></button>`}
 window.openClover=()=>{let d=$('#clsheet');if(!d){d=document.createElement('div');d.id='clsheet';document.body.appendChild(d);d.addEventListener('click',e=>{if(e.target===d)closeClover()})}
-  d.innerHTML=`<div class="pn" role="dialog" aria-modal="true" aria-label="Chat with Clover"><div class="clvhd"><img src="img/clvr.svg" alt="" width="40" height="47"><div class="grow"><div class="t">Clover</div><div class="s">Lucky Line sales coach</div></div><button class="b sm keep" onclick="closeClover()">Close</button></div>
+  d.innerHTML=`<div class="pn" role="dialog" aria-modal="true" aria-label="Chat with Clover"><div class="clvhd"><img src="img/clvr.svg?v=matte1" alt="" width="40" height="47"><div class="grow"><div class="t">Clover</div><div class="s">Lucky Line sales coach</div></div><button class="b sm keep" onclick="closeClover()">Close</button></div>
    <div id="clvmsgs" class="clvmsgs" aria-live="polite"></div>
    <div class="clvchips" id="clvchips">${CLV_Q.map((x,i)=>`<button class="b sm keep" onclick="askClover(CLV_Q[${i}])">${esc(x)}</button>`).join('')}</div>
    <form class="clvin" onsubmit="event.preventDefault();askClover($('#clvq').value)"><input type="text" id="clvq" class="grow" placeholder="Ask Clover…" autocomplete="off" enterkeyhint="send"><button class="b p keep" type="submit">Send</button></form></div>`;
