@@ -180,6 +180,14 @@ label.f{font:500 11.5px Inter;letter-spacing:0;text-transform:none;color:var(--m
 .grid .card>.row .t{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.ptile .tm{font:700 27px Inter;letter-spacing:-.045em;margin:6px 0 2px}
 .tot{font:700 20px Inter;color:var(--text)}
 .hello{font:700 26px Inter;letter-spacing:-.04em;line-height:1.1;margin:4px 4px 2px}
+
+/* view-only team members: no edit controls */
+body.ro .chk,body.ro .nav a.plus,body.ro button.b,body.ro #rflBtn,body.ro a[href^="#inspect-"],body.ro a.b.p[href^="#job-"]:not(.keep){display:none!important}
+body.ro input:not([type=search]):not([type=email]):not([type=password]),body.ro select,body.ro textarea{pointer-events:none;opacity:.75}
+body.ro .ro-note{display:block!important}
+body.ro .nav>div{grid-template-columns:repeat(4,1fr)}
+body.ro button.b.keep{display:inline-flex!important}
+.ro-note{display:none;font:600 11px Inter;color:var(--amber);margin:0 4px 10px}
 </style>
 </head>
 <body>
@@ -189,7 +197,7 @@ label.f{font:500 11.5px Inter;letter-spacing:0;text-transform:none;color:var(--m
  <div class="brand"><span class="dot off" id="live"></span><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="LG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b8ff5a"/><stop offset="1" stop-color="#2fd38a"/></linearGradient></defs><g fill="url(#LG)"><circle cx="11" cy="11" r="6"/><circle cx="21" cy="11" r="6"/><circle cx="11" cy="20" r="6"/><circle cx="21" cy="20" r="6"/></g><path d="M16 16c1 5 3 9 6 13" stroke="url(#LG)" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M16 9.5v13M9.5 16h13" stroke="#06080c" stroke-width="1.6"/></svg><span id="title"></span></div><span class="mono" id="clockTop" style="font-size:10.5px;color:var(--muted);letter-spacing:.06em"></span>
  <button class="ib" id="signout" aria-label="Sign out" style="display:none" onclick="signOut()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11"/></svg></button><a class="ib" href="#search" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
  </div><div class="status" id="status">Connecting…</div><div class="orbs" id="orbs" aria-label="Most urgent"></div></div>
-<div id="scroll"><main id="view"></main></div>
+<div id="scroll"><main><div class="ro-note">View only. Ask Justin to make changes.</div><div id="view"></div></main></div>
 <nav class="nav"><div>
  <a href="#today" data-v="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>Today</a>
  <a href="#pipeline" data-v="pipeline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="10" rx="1.5"/><rect x="17" y="4" width="4" height="6" rx="1.5"/></svg>Pipe</a>
@@ -256,8 +264,9 @@ const prClass={Urgent:'red',High:'amber',Normal:'',Low:''};
 function Login(){status('Sign in');$('#orbs').innerHTML='';V.innerHTML=`<form class="card" id="lg" style="max-width:420px;margin:24px auto"><div class="hero"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="LG2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b8ff5a"/><stop offset="1" stop-color="#2fd38a"/></linearGradient></defs><g fill="url(#LG2)"><circle cx="11" cy="11" r="6"/><circle cx="21" cy="11" r="6"/><circle cx="11" cy="20" r="6"/><circle cx="21" cy="20" r="6"/></g><path d="M16 16c1 5 3 9 6 13" stroke="url(#LG2)" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M16 9.5v13M9.5 16h13" stroke="#06080c" stroke-width="1.6"/></svg><span class="wm"><b>Lucky Line</b><i>CRM</i></span></div><div class="t" style="text-align:center;margin-top:2px">Montana team</div><div class="s" style="text-align:center">Sign in to see the leads, pipeline and today's calls.</div>
   <label class="f">Email</label><input type="email" name="e" autocomplete="username" required><label class="f">Password</label><input type="password" name="p" autocomplete="current-password" required style="width:100%;min-height:38px;border-radius:9px;border:1px solid var(--border2);background:var(--panel2);padding:8px 10px;color:var(--text)">
   <div class="s" id="lerr" style="color:var(--red);margin-top:8px"></div><div class="btns"><button class="b p f" type="submit">Sign in</button></div></form>`;
-  $('#lg').onsubmit=async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target));$('#lerr').textContent='';const {data,error}=await sb.auth.signInWithPassword({email:f.e.trim(),password:f.p});if(error){$('#lerr').textContent='That email or password is not right';return}session=data.session;$('#live').classList.remove('off');$('#signout').style.display='grid';location.hash='today';go();setTimeout(refreshOrbs,800)}}
-window.signOut=async()=>{await sb.auth.signOut();session=null;$('#signout').style.display='none';go()};
+  $('#lg').onsubmit=async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target));$('#lerr').textContent='';const {data,error}=await sb.auth.signInWithPassword({email:f.e.trim(),password:f.p});if(error){$('#lerr').textContent='That email or password is not right';return}session=data.session;await checkAccess();$('#live').classList.remove('off');$('#signout').style.display='grid';location.hash='today';go();setTimeout(refreshOrbs,800)}}
+async function checkAccess(){if(!hosted||!session)return;try{const r=await sb.rpc('crm_run',{stmts:['select crm.my_access() as a']});const a=r.data&&r.data[0]&&r.data[0].a;const ed=!!(a&&a.editor);if(a&&a.name)window.MYNAME=String(a.name).split(' ')[0];if(a&&a.name&&(!location.hash||location.hash==='#today'))go();document.body.classList.toggle('ro',!ed);if(a&&!a.member){status('Your login is switched off. Ask Justin.')}}catch(e){}}
+window.signOut=async()=>{document.body.classList.remove('ro');await sb.auth.signOut();session=null;$('#signout').style.display='none';go()};
 function go(){if(hosted&&!session){Login();return}const routes={today:Today,pipeline:Pipeline,people:People,search:Search,add:AddLead,inspect:InspectPick};const h=(location.hash||'#today').slice(1);let v=h,arg=null;
   const m=h.match(/^(job|inspect|contact)-(.+)$/);if(m){v=m[1]+'X';arg=m[2]}
   document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===(v.replace('X',''))||(v==='jobX'&&a.dataset.v==='pipeline')));
@@ -268,7 +277,7 @@ function go(){if(hosted&&!session){Login();return}const routes={today:Today,pipe
 }
 addEventListener('hashchange',go);
 
-function guard(fnc){return async(...a)=>{try{await fnc(...a)}catch(e){V.innerHTML=`<div class="card"><div class="t">Can't reach your database right now</div><div class="s" style="margin-top:6px">${esc(e.message==='offline'?'Open this page in Claude (signed in as Justin) so it can use your Supabase connection.':e.message)}</div><div class="btns"><button class="b p" onclick="go()">Try again</button></div></div>`;status('Offline')}}}
+function guard(fnc){return async(...a)=>{try{await fnc(...a)}catch(e){if(/Not a Juicy CRM team member/.test(e.message||'')){V.innerHTML=`<div class="card"><div class="t">This login is switched off</div><div class="s" style="margin-top:6px">You're signed in as ${esc(session&&session.email||'someone else')}. Sign out and sign in with your own login.</div><div class="btns"><button class="b p keep" onclick="signOut()">Sign out</button></div></div>`;status('Switched off');return}V.innerHTML=`<div class="card"><div class="t">Can't reach your database right now</div><div class="s" style="margin-top:6px">${esc(e.message==='offline'?'Open this page in Claude (signed in as Justin) so it can use your Supabase connection.':e.message)}</div><div class="btns"><button class="b p keep" onclick="go()">Try again</button></div></div>`;status('Offline')}}}
 
 /* ---------- TODAY ---------- */
 const first=n=>String(n||'').replace(/^(the|jack|chad)\b/i,m=>m).split(/[ (—·/]/).filter(Boolean)[0]||'';
@@ -288,7 +297,7 @@ const Today=guard(async()=>{
   const props=d.proposals||[],rank={Urgent:0,High:1,Normal:2,Low:3},tasks=(d.tasks||[]).sort((a,b)=>(b.days_late-a.days_late)||(rank[a.priority]-rank[b.priority])||(new Date(a.due_at)-new Date(b.due_at)));
   const late=tasks.filter(t=>t.days_late>0),todays=tasks.filter(t=>!(t.days_late>0)),lateProps=props.filter(p=>p.days_late>0||new Date(p.proposal_due_at)<new Date());
   const worst=Math.max(0,...late.map(t=>t.days_late),...props.map(p=>p.days_late||0));
-  const who=(hosted&&session&&session.email||'').startsWith('gage')?'Gage':'Justin';const hr=+new Date().toLocaleString('en-US',{hour:'numeric',hour12:false,timeZone:TZ});
+  const who=window.MYNAME||'Justin';const hr=+new Date().toLocaleString('en-US',{hour:'numeric',hour12:false,timeZone:TZ});
   V.innerHTML=`<div class="hello">Good ${hr<12?'morning':hr<17?'afternoon':'evening'}, ${who}</div><div class="s" style="margin:0 4px 12px">${late.length+lateProps.length} to rescue · ${props.length} proposals due · ${todays.length} calls today</div>${late.length||lateProps.length?`<div class="alarm" role="alert"><div class="big">▲ ${late.length+lateProps.length} missed — do these first</div><div class="sub">Oldest is ${worst} day${worst===1?'':'s'} late. Every day they wait, they get bigger and louder.</div></div>`:''}
   <div class="grid" style="margin-top:8px">
    <div class="card stat"><div class="k">Missed</div><div class="v" style="color:${late.length+lateProps.length?'var(--red)':'var(--green)'};${late.length+lateProps.length?'text-shadow:0 0 12px rgba(255,77,77,.5)':''}">${late.length+lateProps.length}</div></div>
@@ -493,7 +502,7 @@ setInterval(()=>{const e=$('#clockTop');if(e)e.textContent=new Date().toLocaleSt
 async function refreshOrbs(){try{if(!cache.today||Date.now()-(cache.todayAt||0)>60000){cache.today=await fn('crm.app_today()');cache.todayAt=Date.now()}drawOrbs(cache.today)}catch(e){}}
 (async()=>{
   if(!window.claude||!window.claude.use){hosted=true;session=store.get();
-    $('#live').classList.toggle('off',!session);if(session){$('#signout').style.display='grid';status((session.email||'')+' · signed in')}go();if(session){setTimeout(refreshOrbs,1200);setInterval(refreshOrbs,60000)}return}
+    $('#live').classList.toggle('off',!session);if(session){$('#signout').style.display='grid';status((session.email||'')+' · signed in');checkAccess()}go();if(session){setTimeout(refreshOrbs,1200);setInterval(refreshOrbs,60000)}return}
   go();try{mcp=await claude.use('mcp')}catch(e){mcp=null}
   $('#live').classList.toggle('off',!mcp);if(mcp){go();setTimeout(refreshOrbs,1500);setInterval(refreshOrbs,60000)}else status('Not connected: open in Claude to load your data')})();
 </script>
