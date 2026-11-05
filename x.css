@@ -1,0 +1,59 @@
+/* Lucky Line CRM v2 screens. Same Aurora Glass tokens as index.html.
+   z-index ladder (whole app): aurora 0 < content 1 < bottom menu 20 < top bar 30. Nothing in this file floats over content. */
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:8px}
+.day{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0 7px;border-radius:16px;border:1px solid var(--border);background:var(--panel);cursor:pointer;font:600 10.5px Inter;color:var(--muted);min-width:0}
+.day b{font:700 16px Inter;color:var(--text);letter-spacing:-.02em}
+.day.on{background:#fff;border-color:#fff;color:#0a0b12}.day.on b{color:#0a0b12}
+.day.today:not(.on){border-color:rgba(126,232,180,.6)}
+.day i{display:flex;gap:2px;height:5px;font-style:normal}.day i u{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.day i u.r{background:var(--red)}.day i u.a{background:var(--amber)}
+.ev{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--border)}.ev:first-child{border-top:0;padding-top:2px}
+.ev .tm{flex:none;width:58px;font:600 12px Inter;color:var(--muted);padding-top:1px}
+.ev .bar2{flex:none;width:4px;align-self:stretch;border-radius:2px;background:var(--accent)}
+.ev.install .bar2{background:#8fa8ff}.ev.proposal .bar2{background:var(--red)}.ev.task .bar2{background:var(--amber)}.ev.done{opacity:.5}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (min-width:700px){.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.tilebtn{display:flex;flex-direction:column;gap:6px;padding:14px 12px;min-height:92px}
+.tilebtn svg{width:22px;height:22px;color:var(--accent)}
+.tilebtn .t{font-size:14px}
+.hb{display:grid;grid-template-columns:96px minmax(0,1fr) 64px;gap:8px;align-items:center;padding:5px 0;font-size:12px}
+.hb .lbl{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb .trk{height:10px;border-radius:5px;background:rgba(255,255,255,.07);overflow:hidden}
+.hb .trk i{display:block;height:10px;border-radius:0 4px 4px 0;background:#8fa8ff}
+.hb .val{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.cols{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;align-items:end;height:130px;margin-top:10px;border-bottom:1px solid var(--border)}
+.cols .c{display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;height:100%;gap:4px}
+.cols .c i{display:block;border-radius:4px 4px 0 0;background:#8fa8ff;min-height:2px}
+.cols .c span{font:600 10.5px Inter;color:var(--text);text-align:center;font-variant-numeric:tabular-nums}
+.colx{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:5px;font:500 10.5px Inter;color:var(--muted);text-align:center}
+.sw{position:relative;flex:none;width:44px;height:26px;border-radius:13px;background:rgba(255,255,255,.14);border:0;cursor:pointer;padding:0}
+.sw::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s}
+.sw.on{background:var(--accent)}.sw.on::after{left:21px}
+.docs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px}
+.doc{position:relative;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.06);aspect-ratio:1;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);cursor:pointer;padding:0;color:var(--muted)}
+.doc img{width:100%;height:100%;object-fit:cover;display:block}
+.doc .nm{font:600 10.5px Inter;padding:6px;text-align:center;overflow-wrap:anywhere}
+.mat{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}.mat td{padding:5px 2px;border-top:1px solid var(--border)}.mat td:last-child{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.map{height:300px;border-radius:16px;overflow:hidden;margin-top:8px;background:#111;position:relative;z-index:1}
+.mapbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.thread{display:flex;flex-direction:column;gap:6px;max-height:340px;overflow-y:auto;padding:4px 0}
+.bub{max-width:82%;padding:8px 11px;border-radius:16px;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}
+.bub.in{align-self:flex-start;background:rgba(255,255,255,.1);border-bottom-left-radius:5px}
+.bub.out{align-self:flex-end;background:#2f7d5a;border-bottom-right-radius:5px}
+.bub small{display:block;font-size:10px;color:rgba(255,255,255,.6);margin-top:3px}
+.voice{border:1px solid rgba(126,232,180,.45);background:linear-gradient(135deg,rgba(126,232,180,.16),rgba(126,232,180,.05))}
+.voice .heard{font:600 16px Inter;letter-spacing:-.01em;margin-top:4px;min-height:22px}
+.ib.rec{background:var(--red);border-color:var(--red);color:#fff;animation:throb 1.2s ease-in-out infinite}
+.sig{width:100%;height:150px;border-radius:12px;background:#fff;touch-action:none;display:block}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid var(--border);font-size:12.5px}.kv:first-child{border-top:0}.kv b{font-weight:600}
+.addon{border-left:3px solid var(--amber)}
+.addon.live{border-left-color:var(--accent)}
+code.lk{display:block;font:500 11px 'JetBrains Mono',monospace;background:rgba(255,255,255,.06);border-radius:10px;padding:8px;overflow-wrap:anywhere;margin-top:6px;user-select:all}
+/* top bar: on phones, drop the clock so the title, mic and search always fit without touching */
+.brand,.brand .wm,.brand .vt{white-space:nowrap;min-width:0}
+.brand .vt{overflow:hidden;text-overflow:ellipsis}
+#title{min-width:0;overflow:hidden}
+@media (max-width:480px){#clockTop{display:none!important}}
+label.b svg{flex:none}
+/* view-only logins: hide everything that changes data */
+body.ro .sw,body.ro label.b,body.ro #micBtn,body.ro .acts .chip{display:none!important}
