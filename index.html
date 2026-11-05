@@ -285,6 +285,9 @@ html.daymode .top{background:linear-gradient(180deg,rgba(240,253,246,.95),rgba(2
 html.daymode .orb.clk i{background:#fff;color:#0f1520}
 html.daymode .orb.clk.late i{color:#9f1239}
 html.daymode .orb.clk.late span{color:#be123c}
+:root{--orb-red:#ff4d5e;--orb-yellow:#ffd07a;--orb-green:#7ee8b4}
+html.daymode{--orb-red:#e11d48;--orb-yellow:#eab308;--orb-green:#0f9d63}
+html.daymode #aurora .a1{background:var(--glow1)!important}
 @media (prefers-reduced-motion:reduce){.orb.clk i,.orb.clk i::before,.orb.clk i::after{animation:none}}
 </style>
 </head>
@@ -385,16 +388,19 @@ function drawOrbs(d){const items=[];const t=now();
   (d.tasks||[]).forEach(x=>{if(!items.find(i=>i.href==='#job-'+x.job_id))items.push({href:x.job_id?'#job-'+x.job_id:'#today',label:first(x.contact)||first(x.title),due:new Date(x.due_at).getTime()})});
   (d.upcoming||[]).slice(0,4).forEach(x=>items.push({href:x.job_id?'#job-'+x.job_id:'#today',label:first(x.contact)||first(x.title),due:new Date(x.due_at).getTime(),future:1}));
   items.sort((a,b)=>a.due-b.due);
-  const lateN=items.filter(i=>i.due<t).length;document.documentElement.style.setProperty('--glow1',lateN>3?'#ff3355':lateN>0?'#ff5d7a':'#21c995');const a1=document.querySelector('#aurora .a1');if(a1)a1.style.opacity=Math.min(.75,.3+lateN*.08);
-  $('#orbs').innerHTML=items.slice(0,14).map(i=>{const ms=i.due-t;const lab=ms<0?ago(ms):ms<864e5?ago(ms):new Date(i.due).toLocaleDateString('en-US',{weekday:'short',timeZone:TZ}).toUpperCase();
+  // one palette: tiers red → yellow → green, never mixed
+  items.forEach(i=>{const ms=i.due-t;const win=i.p?36e5:864e5;i.ms=ms;i.fill=ms<0?1:Math.max(.04,Math.min(1,1-ms/win));i.tier=ms<0?0:i.fill>=.5?1:2});
+  items.sort((a,b)=>a.tier-b.tier||a.due-b.due);
+  const lateN=items.filter(i=>i.tier===0).length;document.documentElement.style.setProperty('--glow1',lateN?'var(--orb-red)':'var(--orb-green)');const a1=document.querySelector('#aurora .a1');if(a1)a1.style.opacity=lateN?.42:.3;
+  let r=0;
+  $('#orbs').innerHTML=items.slice(0,14).map(i=>{const ms=i.ms;const lab=ms<0?ago(ms):ms<864e5?ago(ms):new Date(i.due).toLocaleDateString('en-US',{weekday:'short',timeZone:TZ}).toUpperCase();
     // clock ring: one lap = 60 min for a proposal (Alden rule), 24 h for everything else
-    let fill,hue,sat,lit,size,glow,spd,late=ms<0;
-    if(!late){const win=i.p?36e5:864e5;fill=Math.max(.04,Math.min(1,1-ms/win));
-      hue=fill<.5?140-(fill/.5)*92:48-((fill-.5)/.5)*48;sat=90;lit=62;size=44+fill*14;glow=4+fill*14;spd=fill>.75?2.2:0}
-    else{const h=-ms/36e5,k=Math.min(1,Math.log2(1+h/6)/3.2);fill=1;hue=356;sat=80+k*20;lit=60-k*8+0;size=58+k*24;glow=12+k*18;spd=Math.max(.55,2-k*1.45)}
-    const c=`hsl(${hue.toFixed(0)} ${sat.toFixed(0)}% ${lit.toFixed(0)}%)`;
+    let fill=i.fill,c,size,glow,spd,late=ms<0,op=1;
+    if(!late){c=i.tier===1?'var(--orb-yellow)':'var(--orb-green)';size=44+fill*14;glow=4+fill*14;spd=0}
+    else if(r++===0){const h=-ms/36e5,k=Math.min(1,Math.log2(1+h/6)/3.2);c='var(--orb-red)';size=58+k*24;glow=12+k*18;spd=Math.max(.55,2-k*1.45)}
+    else{const n=r-1;const pct=Math.max(30,100-n*18);c=`color-mix(in srgb,var(--orb-red) ${pct}%,transparent)`;size=Math.max(44,56-n*3);glow=Math.max(2,9-n*2);spd=0;op=Math.max(.55,1-n*.12)}
     const st=`--p:${(fill*100).toFixed(1)};--c:${c};--s:${size.toFixed(0)}px;--g:${glow.toFixed(0)}px;--spd:${spd}s`;
-    return `<a class="orb clk${late?' late':''}${spd?' pulse':''}" href="${i.href}"><i style="${st}">${lab}</i><span>${esc(i.label)}</span></a>`}).join('')||'<div class="s" style="padding:6px 2px">Nothing urgent. Nice.</div>'}
+    return `<a class="orb clk${late?' late':''}${spd?' pulse':''}" href="${i.href}" style="opacity:${op}"><i style="${st}">${lab}</i><span>${esc(i.label)}</span></a>`}).join('')||'<div class="s" style="padding:6px 2px">Nothing urgent. Nice.</div>'}
 const Today=guard(async()=>{
   status('Syncing…');const d=await fn('crm.app_today()');cache.today=d;drawOrbs(d);
   const tm=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:TZ});status('Live · synced '+tm);
