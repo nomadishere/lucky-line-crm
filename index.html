@@ -288,6 +288,12 @@ html.daymode .orb.clk.late span{color:#be123c}
 :root{--orb-red:#ff4d5e;--orb-yellow:#ffd07a;--orb-green:#7ee8b4}
 html.daymode{--orb-red:#e11d48;--orb-yellow:#eab308;--orb-green:#0f9d63}
 html.daymode #aurora .a1{background:var(--glow1)!important}
+/* stats & tips stays put; circles scroll underneath it */
+.orbs .tick{position:sticky;left:-22px;z-index:5;align-self:stretch;justify-content:center;padding:0 16px 0 22px;margin:-22px 0 -20px -22px;isolation:isolate}
+.orbs .tick::before{content:'';position:absolute;inset:0 0 0 -14px;background:var(--bg);filter:blur(8px);z-index:-1}
+.orbs .tick .tbox{background:color-mix(in srgb,var(--panel2) 100%,var(--bg))}
+html.daymode .orbs .tick::before{background:#f4f8f6}
+html.daymode .orbs .tick .tbox{background:#fff}
 @media (prefers-reduced-motion:reduce){.orb.clk i,.orb.clk i::before,.orb.clk i::after{animation:none}}
 </style>
 </head>
