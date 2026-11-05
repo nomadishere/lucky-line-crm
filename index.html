@@ -84,12 +84,12 @@ h2 .n{color:var(--faint)}
 .acts{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
 /* floating frosted menu (in its own row, so it never covers content) */
 .nav{flex:none;position:relative;z-index:20;padding:6px 14px calc(env(safe-area-inset-bottom) + 10px);background:var(--bg)}
-.nav>div{max-width:520px;margin:0 auto;height:62px;border-radius:31px;background:rgba(22,28,38,.72);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.55);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding:0 6px}
+.nav>div{max-width:520px;margin:0 auto;height:62px;border-radius:31px;background:rgba(22,28,38,.72);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.55);display:grid;grid-template-columns:repeat(6,1fr);align-items:center;padding:0 4px}
 .nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:600 9px 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);height:52px;border-radius:26px}
 .nav a.on{color:var(--accent);text-shadow:0 0 10px rgba(62,224,161,.7)}
 .nav a.on svg{filter:drop-shadow(0 0 6px rgba(62,224,161,.8))}
 .nav svg{width:19px;height:19px}
-.nav a.plus{width:48px;height:48px;margin:0 auto;border-radius:50%;background:var(--accent);color:#03140d;box-shadow:0 0 18px rgba(62,224,161,.6)}
+.nav a.plus{width:46px;height:46px;margin:0 auto;border-radius:50%;background:var(--accent);color:#03140d;box-shadow:0 0 18px rgba(62,224,161,.6)}
 .nav a.plus svg{width:22px;height:22px}
 .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
 .chip{flex:none;min-height:32px;padding:0 11px;border-radius:16px;border:1px solid var(--border2);background:var(--panel);font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;white-space:nowrap;color:var(--muted)}
@@ -217,7 +217,11 @@ body.ro textarea.fit{pointer-events:auto!important}
 #tsheet .pn{width:100%;max-width:560px;max-height:86vh;overflow:auto;background:rgba(20,24,34,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px 22px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom))}
 #tsheet .txt{white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.5;margin-top:10px}
 #tsheet textarea{min-height:40vh;margin-top:10px;font-size:15px;line-height:1.5}
-body.ro .nav>div{grid-template-columns:repeat(4,1fr)}
+body.ro .nav>div{grid-template-columns:repeat(5,1fr)}
+body.ro button.b.vp{display:inline-flex!important}
+.step{display:flex;gap:10px;align-items:flex-start;margin-top:12px}.step>.n{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:700 12px Inter;background:rgba(255,255,255,.1);color:var(--muted)}.step.done>.n{background:var(--green);color:#03140d}.step.now>.n{background:#fff;color:#0a0b12}.step .grow{min-width:0}
+.b.big{min-height:48px;font-size:14.5px;width:100%}
+.sendurl{display:block;overflow-wrap:anywhere;font-size:12px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.06);margin-top:8px}
 body.ro button.b.keep{display:inline-flex!important}
 .ro-note{display:none;font:600 11px Inter;color:var(--amber);margin:0 4px 10px}
 
@@ -289,12 +293,12 @@ html.daymode .orb.clk.late span{color:#be123c}
 <div class="top" id="top"><div class="toprow">
  <a class="ib" id="backBtn" href="#today" aria-label="Back" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></a>
  <div class="brand"><span class="dot off" id="live"></span><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="LG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b8ff5a"/><stop offset="1" stop-color="#2fd38a"/></linearGradient></defs><g fill="url(#LG)"><circle cx="11" cy="11" r="6"/><circle cx="21" cy="11" r="6"/><circle cx="11" cy="20" r="6"/><circle cx="21" cy="20" r="6"/></g><path d="M16 16c1 5 3 9 6 13" stroke="url(#LG)" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M16 9.5v13M9.5 16h13" stroke="#06080c" stroke-width="1.6"/></svg><span id="title"></span></div><span class="mono" id="clockTop" style="font-size:10.5px;color:var(--muted);letter-spacing:.06em"></span>
- <button class="ib" id="signout" aria-label="Sign out" style="display:none" onclick="signOut()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11"/></svg></button><button class="ib thm" id="thmBtn" aria-label="Switch day or night" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><g id="thmIco"></g></svg></button><button class="ib" id="micBtn" aria-label="Voice command" onclick="startVoice()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button><a class="ib" href="#search" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
- </div><div class="status" id="status">Connecting…</div><div class="orbs" id="orbs" aria-label="Most urgent"></div></div>
+ <button class="ib" id="signout" aria-label="Sign out" style="display:none" onclick="signOut()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11"/></svg></button><button class="ib thm" id="thmBtn" aria-label="Switch day or night" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><g id="thmIco"></g></svg></button><button class="ib" id="micBtn" aria-label="Voice command" onclick="startVoice()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button> </div><div class="status" id="status">Connecting…</div><div class="orbs" id="orbs" aria-label="Most urgent"></div></div>
 <div id="scroll"><main><div class="ro-note">View only. Ask Justin to make changes.</div><div id="view"></div></main></div>
 <nav class="nav"><div>
  <a href="#today" data-v="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>Today</a>
- <a href="#pipeline" data-v="pipeline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="10" rx="1.5"/><rect x="17" y="4" width="4" height="6" rx="1.5"/></svg>Pipe</a>
+ <a href="#pipeline" data-v="pipeline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="10" rx="1.5"/><rect x="17" y="4" width="4" height="6" rx="1.5"/></svg>Pipeline</a>
+ <a href="#search" data-v="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Search</a>
  <a href="#add" data-v="add" class="plus" aria-label="New lead"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></a>
  <a href="#calendar" data-v="calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendar</a>
  <a href="#more" data-v="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>More</a>
@@ -304,7 +308,7 @@ const PID='wwqjoagdnclaylllzcut', TZ='America/Denver';
 const $=s=>document.querySelector(s), V=$('#view');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const q=v=>v==null||v===''?'null':"'"+String(v).replace(/'/g,"''")+"'";
-const ICON={call:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg>',text:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H8l-4 4z"/></svg>',mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg>',snooze:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/></svg>',video:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/></svg>',send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l16-8-6 16-3-7z"/></svg>'};
+const ICON={call:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg>',text:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H8l-4 4z"/></svg>',mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg>',snooze:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/></svg>',video:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/></svg>',send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l16-8-6 16-3-7z"/></svg>',doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h8l5 5v15H6z"/><path d="M14 2v5h5M9 13h7M9 17h7"/></svg>'};
 let mcp=null, sampler=null, cache={};
 function status(t){$('#status').textContent=t}
 
@@ -363,8 +367,8 @@ async function checkAccess(){if(!hosted||!session)return;try{const r=await sb.rp
 window.signOut=async()=>{document.body.classList.remove('ro');await sb.auth.signOut();session=null;$('#signout').style.display='none';go()};
 function go(){if(hosted&&!session){Login();return}const routes=Object.assign({today:Today,pipeline:Pipeline,people:People,search:Search,add:AddLead,inspect:InspectPick},window.XROUTES||{});const argR=Object.assign({jobX:Job,inspectX:Inspect,contactX:Contact},...Object.entries(window.XARGROUTES||{}).map(([k,f])=>({[k+'X']:f})));const h=(location.hash||'#today').slice(1);let v=h,arg=null;
   const m=h.match(/^(job|inspect|contact|invoice|thread)-(.+)$/);if(m){v=m[1]+'X';arg=m[2]}
-  document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===(v.replace('X',''))||(v==='jobX'&&a.dataset.v==='pipeline')||(a.dataset.v==='more'&&!['today','pipeline','add','calendar','jobX','search'].includes(v))));
-  $('#backBtn').style.display=['today','pipeline','calendar','more'].includes(v)?'none':'grid';
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===(v.replace('X',''))||(v==='jobX'&&a.dataset.v==='pipeline')||(a.dataset.v==='more'&&!['today','pipeline','add','calendar','jobX','search','contactX'].includes(v))));
+  $('#backBtn').style.display=['today','pipeline','calendar','more','search'].includes(v)?'none':'grid';
   const vt=Object.assign({pipeline:'Pipeline',people:'People',search:'Search',add:'New lead',inspect:'Inspect',jobX:'Job',inspectX:'Inspection',contactX:'Contact'},window.XTITLES||{})[v];$('#title').innerHTML=vt?`<span class="vt">${vt}</span>`:'<span class="wm"><b>Lucky Line</b><i>CRM</i></span>';
   clearInterval(window._tick);$('#scroll').scrollTop=0;
   argR[v]?argR[v](arg):(routes[v]||Today)();
@@ -432,13 +436,24 @@ window.snooze=async id=>{try{await sql(`update crm.tasks set due_at=(((now() at 
 const STAGES=['Lead','Inspection','Proposal Due','Proposal Sent','Approved','Scheduled','In Progress','On Hold'];
 let pipeFilter='Hot';
 const Pipeline=guard(async()=>{status('Syncing…');const rows=await fn('crm.app_pipeline()');cache.pipe=rows;status(rows.length+' open deals');drawPipe()});
-function drawPipe(){const rows=cache.pipe||[];const counts={};rows.forEach(r=>counts[r.stage]=(counts[r.stage]||0)+1);
-  const hot=rows.filter(r=>r.stage!=='On Hold');const list=pipeFilter==='Hot'?hot:rows.filter(r=>r.stage===pipeFilter);
-  V.innerHTML=`<div class="chips">${['Hot',...STAGES].map(s=>`<button class="chip ${s===pipeFilter?'on':''}" onclick="pipeFilter='${s}';drawPipe()">${s==='Hot'?'Active':s} ${s==='Hot'?hot.length:(counts[s]||0)}</button>`).join('')}</div>
-  <div class="grid" style="margin-top:10px">${list.length?list.map(r=>`<a class="card" style="display:block" href="#job-${r.id}"><div class="row"><div class="grow"><div class="t">${esc(r.title)}</div><div class="s">${esc(r.contact||'')} · ${esc(r.stage)}${r.value?' · $'+Number(r.value).toLocaleString():''}</div></div></div>
+let pipeQ='';
+window.propUrl=t=>(window.PORTAL_BASE||'https://nomadishere.github.io/lucky-line-crm/')+'proposal.html?t='+t;
+window.openProp=(e,t)=>{if(e){e.preventDefault();e.stopPropagation()}window.open(propUrl(t),'_blank','noopener')};
+window.propBtn=(t,cls)=>t?`<button type="button" class="b sm keep vp ${cls||''}" onclick="openProp(event,'${t}')">${ICON.doc||''}View proposal</button>`:'';
+function pipeCard(r){return `<a class="card" style="display:block" href="#job-${r.id}"><div class="row"><div class="grow"><div class="t">${esc(r.title)}</div><div class="s">${esc(r.contact||'')} · ${esc(r.stage)}${r.value?' · $'+Number(r.value).toLocaleString():''}</div></div></div>
    ${r.next_action?`<button type="button" class="nx" onclick="event.preventDefault();event.stopPropagation();openNotes('${r.id}')"><b>Next step</b><span>${esc(r.next_action)}</span></button>`:''}<div class="s">${r.days_quiet!=null?r.days_quiet+' days quiet':'No contact logged'}${r.next_action_due?' · due '+esc(r.next_action_due):''}</div>
-   <div class="risk"><i style="width:${r.risk}%;background:${r.risk>=70?'var(--red)':r.risk>=45?'var(--amber)':'var(--green)'}"></i></div></a>`).join(''):'<div class="card w2 empty">Nothing in this stage.</div>'}</div>
-   ${pipeFilter==='On Hold'?'<div class="s" style="margin-top:12px">Revive pile: older leads from Gage\'s message export. Open one, check the thread, set a next step.</div>':''}`}
+   ${r.prop_token?`<div class="btns" style="margin-top:6px">${propBtn(r.prop_token)}</div>`:''}
+   <div class="risk"><i style="width:${r.risk}%;background:${r.risk>=70?'var(--red)':r.risk>=45?'var(--amber)':'var(--green)'}"></i></div></a>`}
+function drawPipe(){const rows=cache.pipe||[];const counts={};rows.forEach(r=>counts[r.stage]=(counts[r.stage]||0)+1);
+  const hot=rows.filter(r=>r.stage!=='On Hold');
+  V.innerHTML=`<input type="search" id="pipeq" placeholder="Search jobs, people or addresses" value="${esc(pipeQ)}" aria-label="Search the pipeline" style="margin-bottom:10px">
+  <div class="chips">${['Hot',...STAGES].map(s=>`<button class="chip ${s===pipeFilter?'on':''}" onclick="pipeFilter='${s}';drawPipe()">${s==='Hot'?'Active':s} ${s==='Hot'?hot.length:(counts[s]||0)}</button>`).join('')}</div>
+  <div class="grid" id="pipelist" style="margin-top:10px"></div><div id="pipenote"></div>`;
+  const inp=$('#pipeq');inp.oninput=()=>{pipeQ=inp.value;drawPipeList()};drawPipeList()}
+function drawPipeList(){const rows=cache.pipe||[];const f=pipeQ.toLowerCase().trim();
+  const list=f?rows.filter(r=>[r.title,r.contact,r.address,r.stage,r.owner,...(r.phones||[])].join(' ').toLowerCase().includes(f)):(pipeFilter==='Hot'?rows.filter(r=>r.stage!=='On Hold'):rows.filter(r=>r.stage===pipeFilter));
+  $('#pipelist').innerHTML=list.length?list.map(pipeCard).join(''):`<div class="card w2 empty">${f?'No job matches “'+esc(pipeQ)+'”.':'Nothing in this stage.'}</div>`;
+  $('#pipenote').innerHTML=f?`<div class="s" style="margin-top:12px">Searching every stage. Clear the search to filter by stage again.</div>`:pipeFilter==='On Hold'?'<div class="s" style="margin-top:12px">Revive pile: older leads from Gage\'s message export. Open one, check the thread, set a next step.</div>':''}
 
 /* ---------- PEOPLE + SEARCH ---------- */
 const People=guard(async(qs='')=>{status('Syncing…');const rows=await fn(`crm.app_people(${q(qs)})`);cache.people=rows;status(rows.length+' people');
@@ -449,14 +464,14 @@ function drawPeople(f){f=(f||'').toLowerCase();const dig=f.replace(/\D/g,'');con
 const Search=guard(async()=>{if(!cache.people)cache.people=await fn(`crm.app_people('')`);if(!cache.pipe)cache.pipe=await fn('crm.app_pipeline()');status('Type to jump anywhere');
   V.innerHTML=`<input type="search" id="sq" placeholder="Jump to a person, job or address" autofocus><div class="stack" id="sres" style="margin-top:12px"></div>`;const inp=$('#sq');inp.focus();
   inp.oninput=()=>{const f=inp.value.toLowerCase().trim();if(!f){$('#sres').innerHTML='';return}
-    const jobs=(cache.pipe||[]).filter(j=>(j.title+' '+(j.contact||'')).toLowerCase().includes(f)).slice(0,8),ppl=(cache.people||[]).filter(p=>(p.name+' '+(p.company||'')+' '+(p.phones||[]).join(' ')).toLowerCase().includes(f)).slice(0,8);
-    $('#sres').innerHTML=jobs.map(j=>`<a class="card" style="display:block" href="#job-${j.id}"><div class="s">Job · ${esc(j.stage)}</div><div class="t">${esc(j.title)}</div></a>`).join('')+ppl.map(p=>`<a class="card" style="display:block" href="#contact-${p.id}"><div class="s">Person · ${esc(p.category)}</div><div class="t">${esc(p.name)}</div></a>`).join('')||'<div class="empty">No match.</div>'}});
+    const jobs=(cache.pipe||[]).filter(j=>(j.title+' '+(j.contact||'')+' '+(j.address||'')).toLowerCase().includes(f)).slice(0,8),ppl=(cache.people||[]).filter(p=>(p.name+' '+(p.company||'')+' '+(p.phones||[]).join(' ')).toLowerCase().includes(f)).slice(0,8);
+    $('#sres').innerHTML=jobs.map(j=>`<a class="card" style="display:block" href="#job-${j.id}"><div class="s">Job · ${esc(j.stage)}</div><div class="t">${esc(j.title)}</div>${j.prop_token?`<div class="btns" style="margin-top:6px">${propBtn(j.prop_token)}</div>`:''}</a>`).join('')+ppl.map(p=>`<a class="card" style="display:block" href="#contact-${p.id}"><div class="s">Person · ${esc(p.category)}</div><div class="t">${esc(p.name)}</div></a>`).join('')||'<div class="empty">No match.</div>'}});
 
-const Contact=guard(async id=>{status('Loading…');const r=await sql(`select row_to_json(c) d, (select json_agg(json_build_object('id',j.id,'title',j.title,'stage',j.stage)) from crm.jobs j where j.contact_id=c.id) jobs from crm.contacts c where c.id=${q(id)}`);const c=typeof r[0].d==='string'?JSON.parse(r[0].d):r[0].d;const jobs=typeof r[0].jobs==='string'?JSON.parse(r[0].jobs):(r[0].jobs||[]);status(c.category);
+const Contact=guard(async id=>{status('Loading…');const r=await sql(`select row_to_json(c) d, (select json_agg(json_build_object('id',j.id,'title',j.title,'stage',j.stage,'prop_token',(select pl.token from crm.portal_links pl where pl.kind='proposal' and pl.job_id=j.id and not pl.revoked and pl.expires_at>now() order by pl.created_at desc limit 1))) from crm.jobs j where j.contact_id=c.id) jobs from crm.contacts c where c.id=${q(id)}`);const c=typeof r[0].d==='string'?JSON.parse(r[0].d):r[0].d;const jobs=typeof r[0].jobs==='string'?JSON.parse(r[0].jobs):(r[0].jobs||[]);status(c.category);
   V.innerHTML=`<div class="card"><div class="t" style="font-size:18px">${esc(c.name)}</div><div class="s">${esc(c.category)}${c.company?' · '+esc(c.company):''}</div>
   <div class="s" style="margin-top:8px">${(c.phones||[]).map(phoneFmt).join(' · ')}${(c.emails||[]).length?'<br>'+c.emails.map(esc).join(' · '):''}</div>${c.background?`<div class="s" style="margin-top:8px;color:var(--text)">${esc(c.background)}</div>`:''}
   <div class="btns">${contactBtns(c.phones,c.emails)}<a class="b" href="#thread-${c.id}">Text history</a></div></div>
-  <h2>Jobs <span class="n">${jobs.length}</span></h2><div class="stack">${jobs.map(j=>`<a class="card" style="display:block" href="#job-${j.id}"><div class="t">${esc(j.title)}</div><div class="s">${esc(j.stage)}</div></a>`).join('')}
+  <h2>Jobs <span class="n">${jobs.length}</span></h2><div class="stack">${jobs.map(j=>`<a class="card" style="display:block" href="#job-${j.id}"><div class="t">${esc(j.title)}</div><div class="s">${esc(j.stage)}</div>${j.prop_token?`<div class="btns" style="margin-top:6px">${propBtn(j.prop_token)}</div>`:''}</a>`).join('')}
   <button class="b f" style="width:100%" onclick="newJob('${c.id}')">New job for ${esc(c.name.split(' ')[0])}</button></div>`});
 window.newJob=async cid=>{const r=await sql(`insert into crm.jobs(ref,contact_id,title,stage,priority,owner,next_action,next_action_due,source) select 'A:'||extensions.uuid_generate_v4(), id, name||' — new job','Lead','High','Justin','Call and schedule the inspection',(now() at time zone '${TZ}')::date,'App' from crm.contacts where id=${q(cid)} returning id`);location.hash='job-'+r[0].id};
 
@@ -488,7 +503,7 @@ addEventListener('resize',()=>{document.querySelectorAll('textarea.fit').forEach
 document.addEventListener('click',e=>{const el=e.target.closest('.cl3.cut');if(!el||el.closest('#tsheet,#nsheet'))return;
   const tile=el.closest('[id^="t-"]');const job=tile&&tile.querySelector('a[href^="#job-"]');e.preventDefault();e.stopPropagation();
   if(job&&el.classList.contains('t')){openNotes(job.getAttribute('href').slice(5));return}openText(el)},true);
-window.openText=src=>{let sh=$('#tsheet');if(!sh){sh=document.createElement('div');sh.id='tsheet';sh.onclick=e=>{if(e.target===sh)closeText()};document.body.appendChild(sh)}
+window.openText=src=>{let sh=$('#tsheet');if(!sh){sh=document.createElement('div');sh.id='tsheet';sh.setAttribute('role','dialog');sh.setAttribute('aria-modal','true');sh.onclick=e=>{if(e.target===sh)closeText()};document.body.appendChild(sh)}
   const editable=src.tagName==='TEXTAREA'&&!src.readOnly&&!document.body.classList.contains('ro');
   const lbl=src.dataset.label||FIT_LBL[src.id]||FIT_LBL[[...src.classList].find(c=>FIT_LBL[c])]||src.getAttribute('aria-label')||(src.closest('div')&&src.closest('div').previousElementSibling&&src.closest('div').previousElementSibling.tagName==='LABEL'?src.closest('div').previousElementSibling.textContent:'')||(src.previousElementSibling&&src.previousElementSibling.tagName==='LABEL'?src.previousElementSibling.textContent:'')||'Full note';
   const val=src.tagName==='TEXTAREA'?src.value:src.textContent;
@@ -500,7 +515,7 @@ window.closeText=()=>{const sh=$('#tsheet');if(sh)sh.classList.remove('on');if(!
 addEventListener('keydown',e=>{if(e.key==='Escape')closeText()});addEventListener('hashchange',()=>closeText());
 
 /* ---------- FULL NOTES SHEET ---------- */
-window.openNotes=async id=>{let sh=$('#nsheet');if(!sh){sh=document.createElement('div');sh.id='nsheet';sh.onclick=e=>{if(e.target===sh)closeNotes()};document.body.appendChild(sh)}
+window.openNotes=async id=>{let sh=$('#nsheet');if(!sh){sh=document.createElement('div');sh.id='nsheet';sh.setAttribute('role','dialog');sh.setAttribute('aria-modal','true');sh.onclick=e=>{if(e.target===sh)closeNotes()};document.body.appendChild(sh)}
   sh.innerHTML='<div class="pn" role="dialog" aria-modal="true" aria-label="Full notes"><div class="hd"><div class="t">Loading…</div><button class="b sm keep" onclick="closeNotes()">Close</button></div></div>';sh.classList.add('on');document.body.style.overflow='hidden';
   try{const d=await fn(`crm.app_job(${q(id)})`);const j=d.job||{},c=d.contact||{};const ins=(d.inspections||[]).find(i=>i.findings&&i.findings.summary);
     const open=(d.tasks||[]).filter(t=>!t.done_at);
@@ -511,7 +526,7 @@ window.openNotes=async id=>{let sh=$('#nsheet');if(!sh){sh=document.createElemen
      ${j.address?`<div class="blk"><b>Address</b><div class="txt">${esc(j.address)}</div></div>`:''}
      ${ins?`<div class="blk"><b>Inspection summary</b><div class="txt">${esc(ins.findings.summary)}</div></div>`:''}
      <div class="blk"><b>Notes and history (${(d.notes||[]).length})</b>${(d.notes||[]).map(n=>`<div class="note"><div class="s">${esc(n.kind)} · ${esc(fmtDue(n.happened_at))}${n.author?' · '+esc(n.author):''}</div><div class="txt">${esc(n.body)}</div></div>`).join('')||'<div class="s">Nothing logged yet.</div>'}</div>
-     <div class="btns"><a class="b p f keep" href="#job-${j.id}" onclick="closeNotes()">Open job</a></div>`}
+     <div class="btns">${(()=>{const pr=(cache.pipe||[]).find(x=>x.id===j.id);return pr&&pr.prop_token?`<a class="b f keep" href="${esc(propUrl(pr.prop_token))}" target="_blank" rel="noopener">${ICON.doc}View proposal</a>`:''})()}<a class="b p f keep" href="#job-${j.id}" onclick="closeNotes()">Open job</a></div>`}
   catch(e){sh.querySelector('.hd .t').textContent='Could not load notes: '+e.message}};
 window.closeNotes=()=>{const sh=$('#nsheet');if(sh)sh.classList.remove('on');document.body.style.overflow=''};
 addEventListener('keydown',e=>{if(e.key==='Escape')closeNotes()});addEventListener('hashchange',()=>closeNotes());
@@ -522,7 +537,8 @@ const Job=guard(async id=>{status('Loading…');const [d,ests]=await Promise.all
   const clock=j.stage==='Proposal Due'&&!j.proposal_sent_at&&j.proposal_due_at;
   V.innerHTML=`<div class="card"><div class="t" style="font-size:18px">${esc(j.title)}</div><a class="s" href="#contact-${c.id}">${esc(c.name||'No contact')} ›</a>${j.address?`<div class="s">${esc(j.address)}</div>`:''}
     ${clock?`<div class="clock" data-due="${new Date(j.proposal_due_at).getTime()}"></div><div class="bar" data-due="${new Date(j.proposal_due_at).getTime()}" data-start="${new Date(j.inspected_at||new Date(j.proposal_due_at).getTime()-3600e3).getTime()}"><i></i></div>`:''}
-    <div class="btns">${contactBtns(c.phones,c.emails)}<a class="b p" id="rflBtn" href="${roofly(j,c,'')}" target="_blank" rel="noopener">${ICON.video}Roofly report</a><a class="b" href="#inspect-${j.id}">Quick video</a></div></div>
+    <div class="btns">${contactBtns(c.phones,c.emails)}</div></div>
+  ${propSteps(j,c,d)}
   <div class="card" style="margin-top:8px"><div class="grid2"><div><label class="f" style="margin-top:0">Stage</label><select id="jstage">${[...STAGES,'Completed','Paid','Lost'].map(s=>`<option ${s===j.stage?'selected':''}>${s}</option>`).join('')}</select></div>
     <div><label class="f" style="margin-top:0">Priority</label><select id="jpri">${['Urgent','High','Normal','Low'].map(s=>`<option ${s===j.priority?'selected':''}>${s}</option>`).join('')}</select></div>
     <div><label class="f">Value ($)</label><input type="number" id="jval" value="${j.value??''}" inputmode="decimal"></div><div><label class="f">Next step due</label><input type="date" id="jdue" value="${j.next_action_due||''}"></div></div>
@@ -543,7 +559,18 @@ const Job=guard(async id=>{status('Loading…');const [d,ests]=await Promise.all
     <div class="sec">${d.notes.map(n=>`<div class="note"><div class="s">${esc(n.kind)} · ${esc(fmtDue(n.happened_at))}${n.author?' · '+esc(n.author):''}</div><div class="cl3" data-label="${esc(n.kind)} note" style="white-space:pre-wrap">${esc(n.body)}</div></div>`).join('')||'<div class="empty">Nothing logged yet.</div>'}</div></div>
   ${d.other_jobs.length?`<h2>Other jobs</h2><div class="stack">${d.other_jobs.map(o=>`<a class="card" style="display:block" href="#job-${o.id}"><div class="t">${esc(o.title)}</div><div class="s">${esc(o.stage)}</div></a>`).join('')}</div>`:''}`;
   startClocks();if(window.afterJob)afterJob(d);
-  sql(`select crm.roofly_code(${q(j.id)}) as c`).then(r=>{const b=$('#rflBtn');if(b&&r[0])b.href=roofly(j,c,r[0].c)}).catch(()=>{})});
+  sql(`select crm.roofly_code(${q(j.id)}) as c`).then(r=>{document.querySelectorAll('.rfl').forEach(b=>{if(r[0])b.href=roofly(j,c,r[0].c)})}).catch(()=>{});
+  sql(`select token,views,last_viewed_at from crm.portal_links where kind='proposal' and job_id=${q(j.id)} and not revoked and expires_at>now() order by created_at desc limit 1`).then(r=>{const l=r[0];const box=$('#propView');if(!box)return;
+    if(l){box.innerHTML=`<a class="b big keep" href="${esc(propUrl(l.token))}" target="_blank" rel="noopener">${ICON.doc}View proposal</a><div class="s" style="margin-top:6px;text-align:center">${l.views?'Customer opened it '+l.views+' time'+(l.views>1?'s':'')+' · last '+esc(fmtDue(l.last_viewed_at)):'Customer hasn\'t opened it yet'}</div>`}
+    else if(j.proposal_sent_at){box.innerHTML='<div class="s" style="margin-top:8px">Marked sent '+esc(fmtDue(j.proposal_sent_at))+' outside the app (email or text). No customer page was made.</div>'}}).catch(()=>{})});
+function propSteps(j,c,d){const ests=d.estimates||[],rf=(d.inspections||[]).find(i=>i.source==='roofly'),hasRep=!!rf||(d.inspections||[]).length>0,sent=!!j.proposal_sent_at,signed=['Approved','Scheduled','In Progress','Completed','Paid'].includes(j.stage);
+  const s1=hasRep||ests.length?'done':'now',s2=sent?'done':(ests.length?'now':'');
+  return `<div class="card" style="margin-top:8px" id="propCard"><div class="row"><div class="t grow" style="font-size:16px">Proposal</div><span class="pill ${signed?'green':sent?'':'amber'}">${signed?'Signed':sent?'Sent':ests.length?'Ready to send':'Not started'}</span></div>
+   <div class="step ${s1}"><div class="n">${s1==='done'?'✓':'1'}</div><div class="grow"><div class="t" style="font-size:14px">${hasRep?'Roofly report done':'Create the Roofly report'}</div><div class="s">${hasRep?(ests.length?ests.length+' priced option'+(ests.length>1?'s':'')+' saved below.':'Report is in. Add the priced options in Roofly or below.'):'Photos, findings and priced options. It all saves back to this job.'}</div>
+     <a class="b ${s1==='now'?'p big':'f'} rfl" id="rflBtn" style="margin-top:8px${s1==='now'?'':';width:100%'}" href="${roofly(j,c,'')}" target="_blank" rel="noopener">${ICON.video}${hasRep?'Open Roofly report':'Create Roofly report'}</a>${s1==='now'?`<a class="b sm" style="margin-top:6px" href="#inspect-${j.id}">or quick video instead</a>`:''}</div></div>
+   <div class="step ${s2}"><div class="n">${s2==='done'?'✓':'2'}</div><div class="grow"><div class="t" style="font-size:14px">${sent?'Sent to client':'Send to client'}</div><div class="s">${sent?'Sent '+esc(fmtDue(j.proposal_sent_at))+'. They can pick an option and sign on their phone.':ests.length?'Text or email '+esc((c.name||'the customer').split(/[ (—]/)[0])+' a link. They pick an option and sign with a finger.':'Unlocks once the Roofly report has priced options.'}</div>
+     ${ests.length?`<button class="b ${sent?'f':'p big'}" style="margin-top:8px;width:100%" onclick="sendClient('${j.id}')">${ICON.send}${sent?'Send again':'Send to client'}</button>`:''}</div></div>
+   <div id="propView"></div></div>`}
 function inspCard(i,j,c){const f=i.findings||{};const items=f.findings||[];return `<div class="card" style="margin-top:8px"><div class="row"><div class="grow"><div class="t">${i.source==='roofly'?'Roofly report':'Walk-around'} · ${esc(fmtDue(i.recorded_at))}</div><div class="s">${i.source==='roofly'?(i.estimate_total?'Recommended '+money(i.estimate_total):'Report built'):(i.frame_count||0)+' frames · '+(i.transcript?'narration transcribed':'narration pending')} · ${esc(i.status.replace('_',' '))}</div></div>${i.report_url?`<a class="b sm" href="${esc(i.report_url)}" target="_blank" rel="noopener">Open report</a>`:''}</div>
   ${(i.thumbs||[]).length?`<div class="thumbs">${i.thumbs.slice(0,8).map(b=>`<img alt="" src="data:image/jpeg;base64,${b}">`).join('')}</div>`:''}
   ${f.summary?`<div class="sec"><div class="t" style="font-size:14px">Summary</div><div class="s cl3" data-label="Inspection summary" style="color:var(--text)">${esc(f.summary)}</div></div>`:''}

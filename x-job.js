@@ -7,8 +7,7 @@ window.afterJob=async d=>{const box=$('#jobx');if(!box)return;const j=d.job,c=d.
   let prop='';
   if(x.signature){const g=x.signature;prop=`<div class="card" style="border-color:rgba(126,232,180,.55);background:rgba(126,232,180,.1)"><div class="row"><div class="grow"><div class="t">Signed by ${esc(g.name)}</div><div class="s">${esc(fmtDue(g.at))} · ${esc(g.option||'')} · ${money(g.total)}</div></div><span class="pill green">Approved</span></div>${g.png?`<img alt="Signature" src="${esc(g.png)}" style="width:100%;max-width:320px;background:#fff;border-radius:10px;margin-top:8px;display:block">`:''}
     <div class="btns"><button class="b p f" onclick="newInvoice('${j.id}','deposit')">${XI.inv}Deposit invoice (50%)</button><a class="b f" target="_blank" rel="noopener" href="${x.link?PORTAL_BASE+'proposal.html?t='+x.link.token:'#'}">View signed proposal</a></div></div>`}
-  else if(ests.length){const l=x.link;prop=`<div class="card"><div class="row"><div class="grow"><div class="t">Proposal page + e-signature</div><div class="s">${l?(l.views?`Opened ${l.views} time${l.views>1?'s':''} · last ${esc(fmtDue(l.last))}`:'Link made, not opened yet'):'The customer picks an option and signs on their phone. The job moves to Approved by itself.'}</div></div>${l&&l.views?'<span class="pill amber">Viewed</span>':''}</div>
-    <div class="btns" id="plink"><button class="b p f" onclick="propLink('${j.id}')">${XI.link}${l?'Show customer link':'Get customer link'}</button></div></div>`}
+  /* unsigned: the Proposal card at the top of the job handles Create Roofly report → Send to client → View proposal */
   /* 2. schedule */
   const st=j.scheduled_start?new Date(j.scheduled_start):null;const stD=st?dISO(st):'',stT=st?tmLocal(st):'7:30 AM';const days=st&&j.scheduled_end?Math.max(1,Math.round((new Date(j.scheduled_end)-st)/864e5)||1):1;
   const sched=`<div class="card"><div class="t">Schedule</div><div class="s">${st?'Install '+esc(fmtDue(j.scheduled_start))+(j.crew?' · crew '+esc(j.crew):''):'No install date yet.'}${x.events.length?' · '+x.events.map(e=>esc(e.kind)+' '+esc(fmtDue(e.starts_at))).join(', '):''}</div>
@@ -43,6 +42,21 @@ window.propLink=async jid=>{const d=cache.job,j=d.job,c=d.contact||{};const r=aw
   const first=(c.name||'there').split(/[ (—]/)[0];const body=`Hi ${first}, here's your Lucky Line Roofing proposal${j.address?' for '+j.address:''}. You can look over the options and sign right on your phone:\n${url}\n\nAny questions, just call or text. — Justin, 406-609-9950`;
   const sent=()=>{if(!j.proposal_sent_at){j.proposal_sent_at=new Date().toISOString();setTimeout(()=>markSent(jid),1200)}};window._propSent=sent;
   $('#plink').innerHTML=`<code class="lk">${esc(url)}</code><div class="btns" style="width:100%">${(c.phones||[])[0]?`<a class="b p f" href="${esc(smsHref(c.phones[0],body))}" onclick="_propSent();logOut('${c.id||''}','${jid}',${esc(JSON.stringify(body))})">${ICON.text}Text it</a>`:''}${(c.emails||[])[0]?(mcp?`<button class="b f" onclick="gmailLink('${jid}',${esc(JSON.stringify(body))})">${ICON.mail}Gmail draft</button>`:`<a class="b f" href="${esc(mailHref(c.emails[0],'Your roof proposal from Lucky Line Roofing',body))}" onclick="_propSent()">${ICON.mail}Email it</a>`):''}<button class="b f" onclick="copyText(${esc(JSON.stringify(url))},'Link copied');_propSent()">Copy</button><a class="b f" href="${esc(url)}" target="_blank" rel="noopener">Preview</a></div>`};
+window.sendClient=async jid=>{const d=cache.job,j=d.job,c=d.contact||{};let sh=$('#nsheet');if(!sh){sh=document.createElement('div');sh.id='nsheet';sh.setAttribute('role','dialog');sh.setAttribute('aria-modal','true');sh.onclick=e=>{if(e.target===sh)closeNotes()};document.body.appendChild(sh)}
+  const first=(c.name||'there').split(/[ (—]/)[0];
+  sh.innerHTML='<div class="pn" role="dialog" aria-modal="true" aria-label="Send proposal"><div class="hd"><div class="t">Making the link…</div><button class="b sm keep" onclick="closeNotes()">Close</button></div></div>';sh.classList.add('on');document.body.style.overflow='hidden';
+  try{const r=await sql(`select crm.portal_link('proposal',${q(jid)}) as t`);const url=PORTAL_BASE+'proposal.html?t='+r[0].t;
+    const body=`Hi ${first}, here's your Lucky Line Roofing proposal${j.address?' for '+j.address:''}. You can look over the options and sign right on your phone:\n${url}\n\nAny questions, just call or text. — Justin, 406-609-9950`;
+    window._propSent=()=>{if(!j.proposal_sent_at){j.proposal_sent_at=new Date().toISOString();setTimeout(()=>{closeNotes();markSent(jid)},1200)}};
+    const ph=(c.phones||[])[0],em=(c.emails||[])[0];
+    sh.querySelector('.pn').innerHTML=`<div class="hd"><div class="t">Send proposal to ${esc(first)}<div class="s">${esc(j.title)}</div></div><button class="b sm keep" onclick="closeNotes()">Close</button></div>
+     <div class="s">${esc(first)} opens this link, picks an option and signs with a finger. The job moves to Approved by itself.</div><code class="sendurl">${esc(url)}</code>
+     <div class="stack" style="margin-top:12px;gap:8px">
+      ${ph?`<a class="b p big" href="${esc(smsHref(ph,body))}" onclick="_propSent();logOut('${c.id||''}','${jid}',${esc(JSON.stringify(body))})">${ICON.text}Text it to ${esc(phoneFmt(ph))}</a>`:''}
+      ${em?(mcp?`<button class="b big ${ph?'':'p'}" onclick="gmailLink('${jid}',${esc(JSON.stringify(body))})">${ICON.mail}Gmail draft to ${esc(em)}</button>`:`<a class="b big ${ph?'':'p'}" href="${esc(mailHref(em,'Your roof proposal from Lucky Line Roofing',body))}" onclick="_propSent()">${ICON.mail}Email it to ${esc(em)}</a>`):''}
+      <button class="b big" onclick="copyText(${esc(JSON.stringify(url))},'Link copied');_propSent()">Copy link</button>
+      <a class="b big keep" href="${esc(url)}" target="_blank" rel="noopener">${ICON.doc}View proposal (what ${esc(first)} sees)</a></div>`}
+  catch(e){sh.querySelector('.hd .t').textContent='Could not make the link: '+e.message}};
 window.gmailLink=async(jid,body)=>{const c=cache.job.contact;try{await callTool('Gmail','create_draft',{to:[c.emails[0]],subject:'Your roof proposal from Lucky Line Roofing',body,includeSignature:true});status('Gmail draft ready');_propSent()}catch(e){status('Gmail draft failed: '+e.message)}};
 
 /* schedule */
