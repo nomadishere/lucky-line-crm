@@ -116,9 +116,74 @@ label.f{display:block;font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.
 .vt{font:600 12.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--accent);text-transform:uppercase}
 .hero{display:flex;align-items:center;gap:10px;justify-content:center;margin:6px 0 4px}.hero .logo{width:44px;height:44px}.hero .wm{font-size:32px}.hero .wm i{font-size:15px}
 .tot{font:700 18px 'JetBrains Mono',monospace;color:var(--accent)}
+
+/* ===== Aurora Glass skin ===== */
+:root{--bg:#0a0b12;--panel:rgba(255,255,255,.065);--panel2:rgba(255,255,255,.09);--border:rgba(255,255,255,.11);--border2:rgba(255,255,255,.16);--text:#f3f4f8;--muted:#a3a7ba;--faint:#6f7387;--accent:#7ee8b4;--accent-bg:rgba(126,232,180,.14);--red:#ff7d8f;--red-bg:rgba(255,77,109,.16);--amber:#ffd07a;--amber-bg:rgba(255,190,90,.15);--green:#7ee8b4;--green-bg:rgba(126,232,180,.14)}
+html,body{font:13.5px/1.42 Inter,system-ui,-apple-system,sans-serif;background:var(--bg)}
+#aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#aurora i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;transition:opacity 1s,background 1s}
+#aurora .a1{width:340px;height:340px;top:-110px;left:-90px;background:var(--glow1,#ff4f6d)}
+#aurora .a2{width:300px;height:300px;top:160px;right:-130px;background:#5b6cff;opacity:.42}
+#aurora .a3{width:260px;height:260px;bottom:40px;left:-80px;background:#21c995;opacity:.28}
+.top,#scroll,.nav{position:relative;z-index:1;background:transparent}
+.top{background:linear-gradient(180deg,rgba(10,11,18,.85),rgba(10,11,18,.55));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:0}
+.brand{font:600 13px Inter;letter-spacing:0;text-transform:none;color:var(--text)}
+.wm{font:700 15px Inter;letter-spacing:-.02em}.wm b{background:none;-webkit-background-clip:initial;background-clip:initial;color:var(--text);filter:none}.wm i{font:600 10px Inter;letter-spacing:.06em;border-color:var(--border2);color:var(--muted)}
+.vt{font:600 15px Inter;letter-spacing:-.01em;color:var(--text);text-transform:none}
+.logo{filter:none}
+.status{font:500 11px Inter;letter-spacing:0;text-transform:none;color:var(--muted)}
+#clockTop{font:500 11px Inter!important;letter-spacing:0!important;text-transform:none}
+.ib{background:var(--panel);border-color:var(--border);border-radius:50%;backdrop-filter:blur(20px)}
+.orbs{border-bottom:0;gap:12px;padding:10px 4px 14px;align-items:flex-end}
+.orb{width:auto;min-width:58px;font:600 10.5px Inter;letter-spacing:0;text-transform:none;color:var(--muted)}
+.orb i{font:700 12px Inter;background:rgba(255,255,255,.06);backdrop-filter:blur(16px);transition:all .4s}
+.og i{width:44px;height:44px;border:2px solid rgba(126,232,180,.55);box-shadow:0 0 8px rgba(126,232,180,.25);color:#cfeee0}
+.oy i{width:52px;height:52px;border:2.5px solid #ffd07a;box-shadow:0 0 14px rgba(255,208,122,.55),0 0 26px rgba(255,208,122,.25);color:#ffe4ad}
+.or i{width:60px;height:60px;border:3px solid #ff6b81;box-shadow:0 0 18px rgba(255,107,129,.8),0 0 36px rgba(255,107,129,.4);color:#fff;font-size:13px}
+.or2 i{width:68px;height:68px;border:3px solid #ff4d6d;background:rgba(255,77,109,.18);box-shadow:0 0 22px #ff4d6d,0 0 46px rgba(255,77,109,.55);color:#fff;font-size:14px;animation:throb 1.6s ease-in-out infinite}
+.orr i{width:78px;height:78px;border:3.5px solid #ff3355;background:rgba(255,51,85,.26);box-shadow:0 0 26px #ff3355,0 0 60px rgba(255,51,85,.7),0 0 90px rgba(255,51,85,.35);color:#fff;font-size:15px;animation:throb 1.2s ease-in-out infinite}
+.or span,.or2 span,.orr span{color:#ffb3be;font-weight:700}
+@keyframes throb{50%{transform:scale(1.04);filter:brightness(1.25)}}
+main{padding:6px 14px 20px}
+h2{font:600 12.5px Inter;letter-spacing:0;text-transform:none;color:var(--muted);margin:18px 4px 8px}
+h2 .n{color:var(--faint);font:500 12px Inter}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:12px;backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3)}
+.k{font:500 11.5px Inter;letter-spacing:0;text-transform:none;color:var(--muted)}
+.v{font:700 26px Inter;letter-spacing:-.04em}
+.tag{font:600 11px Inter;letter-spacing:0;text-transform:none}
+.pill{font:600 10.5px Inter;letter-spacing:0;text-transform:none;border-radius:20px;padding:3px 9px}
+.clock{font:700 28px Inter;letter-spacing:-.045em;margin:6px 0 4px;color:var(--text)}
+.clock.late{color:var(--red);text-shadow:none}
+.bar,.risk{height:4px;border-radius:2px;background:rgba(255,255,255,.08)}.bar>i,.risk>i{height:4px;border-radius:2px}
+.b{border-radius:14px;background:rgba(255,255,255,.08);border-color:var(--border);font:600 12.5px Inter}
+.b.p{background:#fff;border-color:#fff;color:#0a0b12;box-shadow:none}
+.b.ic{border-radius:50%;width:36px;min-height:36px}
+.chk{border-radius:50%;border-color:rgba(255,255,255,.3)}
+.chk.on{background:var(--accent);border-color:var(--accent);color:#0a0b12}
+.nav{background:transparent;padding:6px 16px calc(env(safe-area-inset-bottom) + 10px)}
+.nav>div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(30px) saturate(1.5);-webkit-backdrop-filter:blur(30px) saturate(1.5);box-shadow:0 12px 34px rgba(0,0,0,.45)}
+.nav a{font:600 10px Inter;letter-spacing:0;text-transform:none;color:var(--muted)}
+.nav a.on{color:#fff;text-shadow:none}.nav a.on svg{filter:none}
+.nav a.plus{background:#fff;color:#0a0b12;box-shadow:0 6px 18px rgba(255,255,255,.18)}
+.chip{font:600 11.5px Inter;letter-spacing:0;text-transform:none;background:var(--panel);border-color:var(--border);color:var(--muted);backdrop-filter:blur(16px)}
+.chip.on{background:#fff;color:#0a0b12;border-color:#fff;box-shadow:none}
+input[type=text],input[type=tel],input[type=email],input[type=number],input[type=search],input[type=date],input[type=password],select,textarea{background:rgba(255,255,255,.06);border-color:var(--border);border-radius:12px}
+input[type=date]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;text-align:left}
+label.f{font:500 11.5px Inter;letter-spacing:0;text-transform:none;color:var(--muted)}
+.alarm{background:linear-gradient(135deg,rgba(255,77,109,.28),rgba(255,77,109,.1));border:1px solid rgba(255,107,129,.45);border-radius:20px;box-shadow:none;backdrop-filter:blur(20px)}
+.alarm .big{font:700 17px Inter;letter-spacing:-.02em;text-transform:none;color:#fff}
+.alarm .sub{color:#ffc2cb}
+.late1{border-color:rgba(255,208,122,.55)!important;box-shadow:none}
+.late2{border-color:rgba(255,107,129,.7)!important;background:rgba(255,77,109,.14)!important;box-shadow:0 0 22px rgba(255,77,109,.18)}
+.late3{border:1.5px solid #ff4d6d!important;background:rgba(255,77,109,.22)!important;box-shadow:0 0 30px rgba(255,77,109,.35)}
+.ptile .nm{font:600 13px Inter;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.grid .card>.row .t{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.ptile .tm{font:700 27px Inter;letter-spacing:-.045em;margin:6px 0 2px}
+.tot{font:700 20px Inter;color:var(--text)}
+.hello{font:700 26px Inter;letter-spacing:-.04em;line-height:1.1;margin:4px 4px 2px}
 </style>
 </head>
 <body>
+<div id="aurora" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
 <div class="top" id="top"><div class="toprow">
  <a class="ib" id="backBtn" href="#today" aria-label="Back" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></a>
  <div class="brand"><span class="dot off" id="live"></span><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="LG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b8ff5a"/><stop offset="1" stop-color="#2fd38a"/></linearGradient></defs><g fill="url(#LG)"><circle cx="11" cy="11" r="6"/><circle cx="21" cy="11" r="6"/><circle cx="11" cy="20" r="6"/><circle cx="21" cy="20" r="6"/></g><path d="M16 16c1 5 3 9 6 13" stroke="url(#LG)" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M16 9.5v13M9.5 16h13" stroke="#06080c" stroke-width="1.6"/></svg><span id="title"></span></div><span class="mono" id="clockTop" style="font-size:10.5px;color:var(--muted);letter-spacing:.06em"></span>
@@ -182,7 +247,7 @@ async function fn(call){const r=await sql('select '+call+' as d');const d=r[0]&&
 /* ---------- time helpers ---------- */
 const now=()=>Date.now();
 function fmtDue(iso){if(!iso)return'';const d=new Date(iso),t=d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:TZ});const day=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',timeZone:TZ});const today=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',timeZone:TZ});return day===today?t:day+' · '+t}
-function clockText(ms){const late=ms<0;ms=Math.abs(ms);const h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000);const p=n=>String(n).padStart(2,'0');return (late?'+':'')+(h>99?Math.floor(h/24)+'d '+p(h%24)+'h':p(h)+':'+p(m)+':'+p(s))}
+function clockText(ms){if(document.querySelector('.ptile')){const a=Math.abs(ms),h=Math.floor(a/36e5),m=Math.floor(a%36e5/6e4),sx=Math.floor(a%6e4/1e3);return (ms<0?'−':'')+(h>=24?Math.floor(h/24)+'d '+(h%24)+'h':h?h+'h '+String(m).padStart(2,'0')+'m':m+'m '+String(sx).padStart(2,'0')+'s')}const late=ms<0;ms=Math.abs(ms);const h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000);const p=n=>String(n).padStart(2,'0');return (late?'+':'')+(h>99?Math.floor(h/24)+'d '+p(h%24)+'h':p(h)+':'+p(m)+':'+p(s))}
 function phoneFmt(p){const d=String(p||'').replace(/\D/g,'').slice(-10);return d.length===10?`(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`:p}
 function contactBtns(phones,emails,sm,ic){const p=(phones||[])[0],e=(emails||[])[0];let h='';const c=`b ${sm?'sm':''} ${ic?'ic':''}`;if(p)h+=`<a class="${c}" href="tel:${esc(p)}" aria-label="Call">${ICON.call}${ic?'':'Call'}</a><a class="${c}" href="sms:${esc(p)}" aria-label="Text">${ICON.text}${ic?'':'Text'}</a>`;if(e)h+=`<a class="${c}" href="mailto:${esc(e)}" aria-label="Email">${ICON.mail}${ic?'':'Email'}</a>`;return h}
 const prClass={Urgent:'red',High:'amber',Normal:'',Low:''};
@@ -213,7 +278,8 @@ function drawOrbs(d){const items=[];const t=now();
   (d.tasks||[]).forEach(x=>{if(!items.find(i=>i.href==='#job-'+x.job_id))items.push({href:x.job_id?'#job-'+x.job_id:'#today',label:first(x.contact)||first(x.title),due:new Date(x.due_at).getTime()})});
   (d.upcoming||[]).slice(0,4).forEach(x=>items.push({href:x.job_id?'#job-'+x.job_id:'#today',label:first(x.contact)||first(x.title),due:new Date(x.due_at).getTime(),future:1}));
   items.sort((a,b)=>a.due-b.due);
-  $('#orbs').innerHTML=items.slice(0,14).map(i=>{const ms=i.due-t;const cls=ms<-2*864e5?'orr':ms<0?'or':ms<12*36e5?'oy':'og';const lab=ms<0?ago(ms):ms<864e5?ago(ms):new Date(i.due).toLocaleDateString('en-US',{weekday:'short',timeZone:TZ}).toUpperCase();
+  const lateN=items.filter(i=>i.due<t).length;document.documentElement.style.setProperty('--glow1',lateN>3?'#ff3355':lateN>0?'#ff5d7a':'#21c995');const a1=document.querySelector('#aurora .a1');if(a1)a1.style.opacity=Math.min(.75,.3+lateN*.08);
+  $('#orbs').innerHTML=items.slice(0,14).map(i=>{const ms=i.due-t;const cls=ms<-2*864e5?'orr':ms<-864e5?'or2':ms<0?'or':ms<3*36e5?'oy':'og';const lab=ms<0?ago(ms):ms<864e5?ago(ms):new Date(i.due).toLocaleDateString('en-US',{weekday:'short',timeZone:TZ}).toUpperCase();
     return `<a class="orb ${cls}" href="${i.href}"><i>${lab}</i><span>${esc(i.label)}</span></a>`}).join('')||'<div class="s" style="padding:6px 2px">Nothing urgent. Nice.</div>'}
 const Today=guard(async()=>{
   status('Syncing…');const d=await fn('crm.app_today()');cache.today=d;drawOrbs(d);
@@ -222,7 +288,8 @@ const Today=guard(async()=>{
   const props=d.proposals||[],rank={Urgent:0,High:1,Normal:2,Low:3},tasks=(d.tasks||[]).sort((a,b)=>(b.days_late-a.days_late)||(rank[a.priority]-rank[b.priority])||(new Date(a.due_at)-new Date(b.due_at)));
   const late=tasks.filter(t=>t.days_late>0),todays=tasks.filter(t=>!(t.days_late>0)),lateProps=props.filter(p=>p.days_late>0||new Date(p.proposal_due_at)<new Date());
   const worst=Math.max(0,...late.map(t=>t.days_late),...props.map(p=>p.days_late||0));
-  V.innerHTML=`${late.length||lateProps.length?`<div class="alarm" role="alert"><div class="big">▲ ${late.length+lateProps.length} missed — do these first</div><div class="sub">Oldest is ${worst} day${worst===1?'':'s'} late. Every day they wait, they get bigger and louder.</div></div>`:''}
+  const who=(hosted&&session&&session.email||'').startsWith('gage')?'Gage':'Justin';const hr=+new Date().toLocaleString('en-US',{hour:'numeric',hour12:false,timeZone:TZ});
+  V.innerHTML=`<div class="hello">Good ${hr<12?'morning':hr<17?'afternoon':'evening'}, ${who}</div><div class="s" style="margin:0 4px 12px">${late.length+lateProps.length} to rescue · ${props.length} proposals due · ${todays.length} calls today</div>${late.length||lateProps.length?`<div class="alarm" role="alert"><div class="big">▲ ${late.length+lateProps.length} missed — do these first</div><div class="sub">Oldest is ${worst} day${worst===1?'':'s'} late. Every day they wait, they get bigger and louder.</div></div>`:''}
   <div class="grid" style="margin-top:8px">
    <div class="card stat"><div class="k">Missed</div><div class="v" style="color:${late.length+lateProps.length?'var(--red)':'var(--green)'};${late.length+lateProps.length?'text-shadow:0 0 12px rgba(255,77,77,.5)':''}">${late.length+lateProps.length}</div></div>
    <div class="card stat"><div class="k">Proposals due</div><div class="v" style="color:var(--amber)">${props.length}</div></div>
@@ -231,12 +298,11 @@ const Today=guard(async()=>{
   </div>
   ${late.length?`<h2>Missed <span class="n">${late.length}</span></h2><div class="grid">${late.map(t=>tile(t,'late'+Math.min(3,t.days_late))).join('')}</div>`:''}
   <h2>Proposal clock <span class="n">${props.length}</span></h2>
-  <div class="grid">${props.length?props.map(p=>{const due=p.proposal_due_at?new Date(p.proposal_due_at).getTime():now()+3600e3;const lateD=Math.max(0,p.days_late||0);return `<div class="card w2 ${lateD>0?'late'+Math.min(3,lateD):due<now()?'late1':''}">
-    <div class="row"><div class="grow"><a href="#job-${p.id}" class="t">${esc(p.title)}</a><div class="s">${esc(p.contact||'')}</div></div><span class="pill ${prClass[p.priority]}">${esc(p.priority)}</span></div>
-    <div class="row"><div class="clock grow" data-due="${due}">--:--:--</div><div class="s" style="text-align:right">${p.estimates?p.estimates+' option'+(p.estimates>1?'s':''):'no estimate yet'}</div></div>
-    <div class="bar" data-due="${due}" data-start="${p.inspected_at?new Date(p.inspected_at).getTime():due-3600e3}"><i style="width:0"></i></div>
-    <div class="s" style="margin-top:7px;color:var(--text)">${esc(p.next_action||'')}</div>
-    <div class="btns"><a class="b p f" href="#job-${p.id}">${ICON.send}Build and send</a>${contactBtns(p.phones,p.emails,1,1)}</div></div>`}).join(''):'<div class="card w2 empty">No proposals waiting. Log an inspection and the 60-minute clock starts.</div>'}</div>
+  <div class="grid">${props.length?props.map(p=>{const due=p.proposal_due_at?new Date(p.proposal_due_at).getTime():now()+3600e3;const lateD=Math.max(0,p.days_late||0);const late=due<now();return `<a class="card ptile ${lateD>0?'late'+Math.min(3,lateD):late?'late1':''}" style="display:block" href="#job-${p.id}">
+    <div class="row"><span class="pill ${late?'red':due-now()<3*36e5?'amber':'green'}">${late?'Late':due-now()<3*36e5?'Due soon':'On track'}</span></div>
+    <div class="tm clock ${late?'late':''}" data-due="${due}" style="font-size:25px">--:--</div>
+    <div class="nm">${esc(p.title.split('—')[0].trim())}</div><div class="s">${p.estimates?p.estimates+' option'+(p.estimates>1?'s':''):'No estimate yet'}${p.value?' · $'+Math.round(p.value/100)/10+'K':''}</div>
+    <div class="bar" data-due="${due}" data-start="${p.inspected_at?new Date(p.inspected_at).getTime():due-3600e3}" style="margin-top:8px"><i style="width:0"></i></div></a>`}).join(''):'<div class="card w2 empty">No proposals waiting. Log an inspection and the 60-minute clock starts.</div>'}</div>
   <h2>Today <span class="n">${todays.length} · ${d.done_today} done</span></h2>
   <div class="grid">${todays.length?todays.map(t=>tile(t,'')).join(''):'<div class="card w2 empty">All clear for today.</div>'}</div>
   <h2>Coming up <span class="n">${(d.upcoming||[]).length}</span></h2>
@@ -248,7 +314,7 @@ function tile(t,cls){const late=t.days_late>0,soon=!late&&t.due_at&&new Date(t.d
    <span class="tag" style="color:${late||new Date(t.due_at)<new Date()?'var(--red)':soon?'var(--amber)':'var(--green)'}">${esc(tag)}</span>
    <div class="acts">${contactBtns(t.phones,t.emails,1,1)}<button class="b sm ic" aria-label="Move to tomorrow" onclick="snooze('${t.id}')">${ICON.snooze}</button>${t.job_id?`<a class="b sm" href="#job-${t.job_id}">Open</a>`:''}</div></div>`}
 function taskRow(t){return tile(t,'')}
-function startClocks(){const tick=()=>{document.querySelectorAll('.clock[data-due]').forEach(el=>{const ms=+el.dataset.due-now();el.textContent=ms<0?clockText(ms)+' late':clockText(ms);el.classList.toggle('late',ms<0)});document.querySelectorAll('.bar[data-due]').forEach(el=>{const due=+el.dataset.due,st=+el.dataset.start,pct=Math.max(0,Math.min(100,(now()-st)/(due-st)*100));el.firstElementChild.style.width=pct+'%';el.classList.toggle('late',now()>due)})};tick();window._tick=setInterval(tick,1000)}
+function startClocks(){const tick=()=>{document.querySelectorAll('.clock[data-due]').forEach(el=>{const ms=+el.dataset.due-now();el.textContent=el.closest('.ptile')?clockText(ms):(ms<0?clockText(ms)+' late':clockText(ms));el.classList.toggle('late',ms<0)});document.querySelectorAll('.bar[data-due]').forEach(el=>{const due=+el.dataset.due,st=+el.dataset.start,pct=Math.max(0,Math.min(100,(now()-st)/(due-st)*100));el.firstElementChild.style.width=pct+'%';el.classList.toggle('late',now()>due)})};tick();window._tick=setInterval(tick,1000)}
 window.doneTask=async(id,btn)=>{btn.classList.add('on');try{await sql(`update crm.tasks set done_at=now() where id=${q(id)}; insert into crm.notes(contact_id,job_id,kind,body,author,source) select contact_id,job_id,case kind when 'call' then 'call' when 'text' then 'text' else 'note' end,'Done: '||title,'Justin','App' from crm.tasks where id=${q(id)}; select 1`);status('Done ✓');setTimeout(()=>{const r=$('#t-'+id);if(r)r.remove()},350)}catch(e){btn.classList.remove('on');status('Could not save: '+e.message)}};
 window.snooze=async id=>{try{await sql(`update crm.tasks set due_at=(((now() at time zone '${TZ}')::date+1)+time '09:00') at time zone '${TZ}' where id=${q(id)}; select 1`);const r=$('#t-'+id);if(r)r.remove();status('Moved to tomorrow 9:00')}catch(e){status('Could not save: '+e.message)}};
 
