@@ -391,8 +391,8 @@ const first=n=>String(n||'').replace(/^(the|jack|chad)\b/i,m=>m).split(/[ (—·
 function ago(ms){const m=Math.round(Math.abs(ms)/60000);if(m<60)return m+'M';const h=Math.round(m/60);if(h<48)return h+'H';return Math.round(h/24)+'D'}
 function drawOrbs(d){const items=[];const t=now();
   (d.proposals||[]).forEach(p=>{const due=p.proposal_due_at?new Date(p.proposal_due_at).getTime():t;items.push({href:'#job-'+p.id,label:first(p.contact)||first(p.title),due,p:1})});
-  (d.tasks||[]).forEach(x=>{if(!items.find(i=>i.href==='#job-'+x.job_id))items.push({href:x.job_id?'#job-'+x.job_id:'#today',label:first(x.contact)||first(x.title),due:new Date(x.due_at).getTime()})});
-  (d.upcoming||[]).slice(0,4).forEach(x=>items.push({href:x.job_id?'#job-'+x.job_id:'#today',label:first(x.contact)||first(x.title),due:new Date(x.due_at).getTime(),future:1}));
+  (d.tasks||[]).forEach(x=>{if(!x.job_id||!items.find(i=>i.href==='#job-'+x.job_id))items.push({href:x.job_id?'#job-'+x.job_id:x.contact_id?'#contact-'+x.contact_id:'#today',label:first(x.contact)||first(x.title),due:new Date(x.due_at).getTime()})});
+  (d.upcoming||[]).slice(0,4).forEach(x=>items.push({href:x.job_id?'#job-'+x.job_id:x.contact_id?'#contact-'+x.contact_id:'#today',label:first(x.contact)||first(x.title),due:new Date(x.due_at).getTime(),future:1}));
   items.sort((a,b)=>a.due-b.due);
   // one palette: tiers red → yellow → green, never mixed
   items.forEach(i=>{const ms=i.due-t;const win=i.p?36e5:864e5;i.ms=ms;i.fill=ms<0?1:Math.max(.04,Math.min(1,1-ms/win));i.tier=ms<0?0:i.fill>=.5?1:2});
