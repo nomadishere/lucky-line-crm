@@ -1,6 +1,6 @@
 // Lucky Line CRM offline shell. The app files are cached so the CRM opens on a roof with weak signal;
 // customer data always comes live from the database (never cached here).
-const V='llcrm-v2-12';
+const V='llcrm-v2-13';
 const SHELL=['./','index.html','x.css','x-core.js','x-job.js','x-voice.js','x-stats.js','img/clvr.svg','manifest.webmanifest','icons/icon-192.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
