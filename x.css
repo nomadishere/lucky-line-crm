@@ -77,3 +77,10 @@ body.ro .sw,body.ro label.b,body.ro #micBtn,body.ro .acts .chip{display:none!imp
 .coach .bubble{flex:1;min-width:0;position:relative;background:var(--panel2);border:1px solid var(--border2);border-radius:16px 16px 16px 4px;padding:10px 12px;align-self:center}
 .feat{display:flex;gap:12px;align-items:center;margin-top:8px}
 .feat .play{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#0a0b12;font-size:16px;padding-left:3px}
+.prize{background:linear-gradient(135deg,rgba(126,232,180,.16),rgba(255,208,122,.12));border:1px solid rgba(126,232,180,.35);border-radius:14px;padding:10px 12px;margin-bottom:8px}
+.plinks{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+#csheet{position:fixed;inset:0;z-index:96;display:none;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#csheet.on{display:flex;align-items:flex-end;justify-content:center}
+#csheet .pn{width:100%;max-width:560px;max-height:86vh;overflow:auto;background:rgba(20,24,34,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px 22px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom))}
+html.daymode #csheet .pn{background:rgba(255,255,255,.98);border-color:rgba(15,23,42,.1)}
+html.daymode .prize{background:linear-gradient(135deg,rgba(15,157,99,.1),rgba(183,121,31,.08));border-color:rgba(15,157,99,.3)}

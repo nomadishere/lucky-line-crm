@@ -10,8 +10,17 @@ function tickerHTML(s){if(!s)return '';const net=(+s.saved_min||0)-(+s.behind_mi
 /* put the ticker in front of the urgency circles every time they are drawn */
 const _drawOrbs=window.drawOrbs;
 window.drawOrbs=function(d){_drawOrbs(d);const o=$('#orbs');if(!o)return;if(cache.stats)o.insertAdjacentHTML('afterbegin',tickerHTML(cache.stats));
-  loadStats().then(s=>{const box=$('#orbs');if(!box)return;const old=box.querySelector('.tick');if(old)old.outerHTML=tickerHTML(s);else box.insertAdjacentHTML('afterbegin',tickerHTML(s))}).catch(()=>{})};
+  loadStats().then(s=>{contestInvite(s);const box=$('#orbs');if(!box)return;const old=box.querySelector('.tick');if(old)old.outerHTML=tickerHTML(s);else box.insertAdjacentHTML('afterbegin',tickerHTML(s))}).catch(()=>{})};
 
+const PRIZE={title:'First prize: an all-expenses-paid trip to Little Deer Lodge, Montana',sub:'A healing getaway near Yellowstone. Pick your cabin:',links:[['Little Deer Lodge','https://littledeerlodge.com'],['Unicorn Cabin','https://www.airbnb.com/h/littledeerunicorncabin'],['Dragon Cabin','https://www.airbnb.com/h/littledeerdragoncabin'],['Livingston Paradise Retreat','https://www.airbnb.com/h/livingstonparadiseretreat']]};
+function prizeHTML(){return `<div class="prize"><div class="k">🏆 Contest</div><div class="t">${esc(PRIZE.title)}</div><div class="s" style="margin-top:2px">${esc(PRIZE.sub)}</div><div class="plinks">${PRIZE.links.map(([n,u])=>`<a class="b sm keep" href="${u}" target="_blank" rel="noopener">${esc(n)}</a>`).join('')}</div></div>`}
+/* first sign-in: invite everyone into the contest */
+function contestInvite(s){try{if(!s||s.me_on_board||localStorage.getItem('llcrm.contestAsked'))return}catch(e){return}
+  let d=$('#csheet');if(!d){d=document.createElement('div');d.id='csheet';document.body.appendChild(d)}
+  d.innerHTML=`<div class="pn" role="dialog" aria-modal="true" aria-label="Join the contest"><div class="coach" style="background:none;border:0;padding:0"><img class="mascot" src="img/clvr.svg" alt="" width="84" height="98"><div class="bubble"><div class="k">Clvr says</div><div class="t">Want in on the contest?</div><div class="s" style="color:var(--text);margin-top:4px">Join the leaderboard and race the team: tasks done, proposals sent, and proposals out within 60 minutes.</div></div></div>${prizeHTML()}
+   <div class="btns"><button class="b p f keep" onclick="contestAnswer(true)">Join the contest</button><button class="b f keep" onclick="contestAnswer(false)">Not now</button></div></div>`;
+  d.classList.add('on')}
+window.contestAnswer=async on=>{try{localStorage.setItem('llcrm.contestAsked','1')}catch(e){}const d=$('#csheet');if(d)d.classList.remove('on');if(on){try{await sql(`select crm.set_leaderboard(true) as ok`);cache.stats=null;status('You are in the contest ✓');if(location.hash==='#stats')Stats()}catch(e){status('Could not join: '+e.message)}}};
 function tips(s){const t=[];const on=+s.on_time_week||0,sent=+s.proposals_week||0;
   if(+s.late_proposals>0)t.push({h:`${s.late_proposals} proposal${s.late_proposals>1?'s are':' is'} past the 60-minute clock`,b:'Alden closes about 80% because the proposal lands while he is still the freshest roofer in their head. Build it from the walk-around video before you leave the driveway, then hit Send.'});
   if(sent&&on<sent)t.push({h:`${on} of ${sent} proposals went out within 60 minutes this week`,b:'Record the walk-around with narration so the report and options write themselves. Most of the hour is typing, and the CRM can do that part.'});
@@ -36,7 +45,7 @@ const Stats=guard(async()=>{status('Crunching…');const s=await loadStats(true)
   <div class="stack">${T.map(x=>`<div class="card"><div class="t">${esc(x.h)}</div><div class="s cl3" data-label="${esc(x.h)}" style="color:var(--text);margin-top:4px">${esc(x.b)}</div></div>`).join('')}</div>
 
   <h2>Leaderboard <span class="n">opt-in</span></h2>
-  <div class="card">${board.length?board.map((b,i)=>`<div class="lbr"><span class="rk">${i+1}</span><span class="grow t">${esc(b.name)}</span><span class="s">${b.done} done · ${b.sent} sent · ${b.ontime} on time</span><b class="sc">${b.score}</b></div>`).join(''):'<div class="s">Nobody has joined yet. Contests and the leaderboard only show people who opt in.</div>'}
+  <div class="card">${prizeHTML()}${board.length?board.map((b,i)=>`<div class="lbr"><span class="rk">${i+1}</span><span class="grow t">${esc(b.name)}</span><span class="s">${b.done} done · ${b.sent} sent · ${b.ontime} on time</span><b class="sc">${b.score}</b></div>`).join(''):'<div class="s">Nobody has joined yet. Contests and the leaderboard only show people who opt in.</div>'}
    <div class="btns"><button class="b f keep" onclick="optBoard(${!s.me_on_board})">${s.me_on_board?'Leave the leaderboard':'Join the leaderboard'}</button></div>
    <div class="s" style="margin-top:6px">Score = tasks done + 3 per proposal sent + 5 per proposal sent within 60 minutes.</div></div>
 
