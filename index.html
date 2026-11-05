@@ -186,7 +186,7 @@ label.f{font:500 11.5px Inter;letter-spacing:0;text-transform:none;color:var(--m
 .late2{border-color:rgba(255,107,129,.7)!important;background:rgba(255,77,109,.14)!important;box-shadow:0 0 22px rgba(255,77,109,.18)}
 .late3{border:1.5px solid #ff4d6d!important;background:rgba(255,77,109,.22)!important;box-shadow:0 0 30px rgba(255,77,109,.35)}
 .ptile .nm{font:600 13px Inter;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.grid .card>.row .t{overflow-wrap:anywhere}.ptile .tm{font:700 27px Inter;letter-spacing:-.045em;margin:6px 0 2px}
+.grid .card>.row .t{overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.ptile .tm{font:700 27px Inter;letter-spacing:-.045em;margin:6px 0 2px}
 .tot{font:700 20px Inter;color:var(--text)}
 .hello{font:700 26px Inter;letter-spacing:-.04em;line-height:1.1;margin:4px 4px 2px}
 
@@ -196,6 +196,7 @@ body.ro input:not([type=search]):not([type=email]):not([type=password]),body.ro 
 body.ro .ro-note{display:block!important}
 .nx{display:block;margin-top:6px;font-size:12px;line-height:1.4;color:var(--text);white-space:pre-wrap;overflow-wrap:anywhere;cursor:pointer;text-align:left;background:none;border:0;padding:0;font-family:inherit;width:100%}
 .nx b{font-weight:600;color:var(--muted);font-size:10px;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:2px}
+.nx>span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .nx:after{content:'Tap for full notes ›';display:block;margin-top:3px;font-size:10px;color:var(--muted)}
 #nsheet{position:fixed;inset:0;z-index:90;display:none;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 #nsheet.on{display:flex;align-items:flex-end;justify-content:center}
@@ -204,7 +205,17 @@ body.ro .ro-note{display:block!important}
 #nsheet .hd .t{flex:1;font-size:17px}
 #nsheet .blk{margin-top:12px}#nsheet .blk>b{display:block;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600}
 #nsheet .txt{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.45}
-textarea#jnext{min-height:44px;resize:none;overflow:hidden;line-height:1.4}
+/* long text: 3 lines then …, tap for the whole note */
+.cl3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cl3.cut{cursor:pointer}
+textarea.fit{resize:none;overflow:hidden;line-height:1.4;min-height:0}
+.fitw{position:relative;display:block}.fitw.more:after{content:'…  more';position:absolute;right:6px;bottom:5px;padding:1px 8px;border-radius:9px;font:600 11px Inter;color:var(--text);background:rgba(30,36,50,.95);pointer-events:none}
+body.ro textarea.fit{pointer-events:auto!important}
+#tsheet{position:fixed;inset:0;z-index:95;display:none;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#tsheet.on{display:flex;align-items:flex-end;justify-content:center}
+#tsheet .pn{width:100%;max-width:560px;max-height:86vh;overflow:auto;background:rgba(20,24,34,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px 22px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom))}
+#tsheet .txt{white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.5;margin-top:10px}
+#tsheet textarea{min-height:40vh;margin-top:10px;font-size:15px;line-height:1.5}
 body.ro .nav>div{grid-template-columns:repeat(4,1fr)}
 body.ro button.b.keep{display:inline-flex!important}
 .ro-note{display:none;font:600 11px Inter;color:var(--amber);margin:0 4px 10px}
@@ -330,12 +341,12 @@ const Today=guard(async()=>{
   <div class="grid">${props.length?props.map(p=>{const due=p.proposal_due_at?new Date(p.proposal_due_at).getTime():now()+3600e3;const lateD=Math.max(0,p.days_late||0);const late=due<now();return `<a class="card ptile ${lateD>0?'late'+Math.min(3,lateD):late?'late1':''}" style="display:block" href="#job-${p.id}">
     <div class="row"><span class="pill ${late?'red':due-now()<3*36e5?'amber':'green'}">${late?'Late':due-now()<3*36e5?'Due soon':'On track'}</span></div>
     <div class="tm clock ${late?'late':''}" data-due="${due}" style="font-size:25px">--:--</div>
-    <div class="nm">${esc(p.title.split('—')[0].trim())}</div><div class="s">${p.estimates?p.estimates+' option'+(p.estimates>1?'s':''):'No estimate yet'}${p.value?' · $'+Math.round(p.value/100)/10+'K':''}</div>${p.next_action?`<button type="button" class="nx" onclick="event.preventDefault();event.stopPropagation();openNotes('${p.id}')"><b>Next step</b>${esc(p.next_action)}</button>`:''}
+    <div class="nm">${esc(p.title.split('—')[0].trim())}</div><div class="s">${p.estimates?p.estimates+' option'+(p.estimates>1?'s':''):'No estimate yet'}${p.value?' · $'+Math.round(p.value/100)/10+'K':''}</div>${p.next_action?`<button type="button" class="nx" onclick="event.preventDefault();event.stopPropagation();openNotes('${p.id}')"><b>Next step</b><span>${esc(p.next_action)}</span></button>`:''}
     <div class="bar" data-due="${due}" data-start="${p.inspected_at?new Date(p.inspected_at).getTime():due-3600e3}" style="margin-top:8px"><i style="width:0"></i></div></a>`}).join(''):'<div class="card w2 empty">No proposals waiting. Log an inspection and the 60-minute clock starts.</div>'}</div>
   <h2>Today <span class="n">${todays.length} · ${d.done_today} done</span></h2>
   <div class="grid">${todays.length?todays.map(t=>tile(t,'')).join(''):'<div class="card w2 empty">All clear for today.</div>'}</div>
   <h2>Coming up <span class="n">${(d.upcoming||[]).length}</span></h2>
-  <div class="grid">${(d.upcoming||[]).slice(0,10).map(t=>`<div class="card"><div class="t">${esc(t.title)}</div><div class="tag" style="color:var(--green)">${esc(fmtDue(t.due_at))}</div></div>`).join('')||'<div class="card w2 empty">Nothing scheduled yet.</div>'}</div>`;
+  <div class="grid">${(d.upcoming||[]).slice(0,10).map(t=>`<div class="card"><div class="t cl3">${esc(t.title)}</div><div class="tag" style="color:var(--green)">${esc(fmtDue(t.due_at))}</div></div>`).join('')||'<div class="card w2 empty">Nothing scheduled yet.</div>'}</div>`;
   startClocks();
 });
 function tile(t,cls){const late=t.days_late>0,soon=!late&&t.due_at&&new Date(t.due_at)-new Date()<2*36e5;const tag=late?`${t.days_late} day${t.days_late===1?'':'s'} late`:new Date(t.due_at)<new Date()?'Overdue · '+fmtDue(t.due_at):'Due '+fmtDue(t.due_at);
@@ -355,7 +366,7 @@ function drawPipe(){const rows=cache.pipe||[];const counts={};rows.forEach(r=>co
   const hot=rows.filter(r=>r.stage!=='On Hold');const list=pipeFilter==='Hot'?hot:rows.filter(r=>r.stage===pipeFilter);
   V.innerHTML=`<div class="chips">${['Hot',...STAGES].map(s=>`<button class="chip ${s===pipeFilter?'on':''}" onclick="pipeFilter='${s}';drawPipe()">${s==='Hot'?'Active':s} ${s==='Hot'?hot.length:(counts[s]||0)}</button>`).join('')}</div>
   <div class="grid" style="margin-top:10px">${list.length?list.map(r=>`<a class="card" style="display:block" href="#job-${r.id}"><div class="row"><div class="grow"><div class="t">${esc(r.title)}</div><div class="s">${esc(r.contact||'')} · ${esc(r.stage)}${r.value?' · $'+Number(r.value).toLocaleString():''}</div></div></div>
-   ${r.next_action?`<button type="button" class="nx" onclick="event.preventDefault();event.stopPropagation();openNotes('${r.id}')"><b>Next step</b>${esc(r.next_action)}</button>`:''}<div class="s">${r.days_quiet!=null?r.days_quiet+' days quiet':'No contact logged'}${r.next_action_due?' · due '+esc(r.next_action_due):''}</div>
+   ${r.next_action?`<button type="button" class="nx" onclick="event.preventDefault();event.stopPropagation();openNotes('${r.id}')"><b>Next step</b><span>${esc(r.next_action)}</span></button>`:''}<div class="s">${r.days_quiet!=null?r.days_quiet+' days quiet':'No contact logged'}${r.next_action_due?' · due '+esc(r.next_action_due):''}</div>
    <div class="risk"><i style="width:${r.risk}%;background:${r.risk>=70?'var(--red)':r.risk>=45?'var(--amber)':'var(--green)'}"></i></div></a>`).join(''):'<div class="card w2 empty">Nothing in this stage.</div>'}</div>
    ${pipeFilter==='On Hold'?'<div class="s" style="margin-top:12px">Revive pile: older leads from Gage\'s message export. Open one, check the thread, set a next step.</div>':''}`}
 
@@ -391,6 +402,33 @@ function AddLead(){status('Speed to lead: a call task is created for the next 15
     try{status('Saving…');const r=await sql(`select crm.add_lead(${q(f.name.trim())},${q(ph)},${q(f.email.trim())},${q(f.addr)},${q(f.scope)},${q(f.src)}) as job_id`);
       cache.people=null;cache.pipe=null;location.hash='job-'+r[0].job_id}catch(err){$('#lerr').textContent='Could not save: '+err.message}}}
 
+/* ---------- LONG TEXT: 3 lines, then tap for everything ---------- */
+const FIT_SEL='input.es,input.en,input.an,input.att,input.li,#inotes,#evn,#ititle,textarea.fit';
+const FIT_LBL={es:'Estimate note',en:'Option name',li:'Line item',an:'Automation name',att:'Task',inotes:'Note to customer',evn:'Notes',ititle:'Invoice title',jnext:'Next step'};
+function lineH(el){return parseFloat(getComputedStyle(el).lineHeight)||20}
+function sizeFit(t){const cs=getComputedStyle(t),pad=parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom),max=lineH(t)*3+pad+2;t.style.height='auto';const full=t.scrollHeight;t.style.height=Math.min(full,max)+'px';const w=t.parentElement;if(w&&w.classList.contains('fitw'))w.classList.toggle('more',full>max+2)}
+function fitAll(){document.querySelectorAll(FIT_SEL).forEach(el=>{if(el.tagName==='INPUT'&&el.classList.contains('li')&&(!el.value||document.activeElement===el))return;let t=el;if(el.tagName==='INPUT'){t=document.createElement('textarea');for(const a of el.attributes)if(!['type','value','list'].includes(a.name))t.setAttribute(a.name,a.value);t.value=el.value;t.rows=1;el.replaceWith(t)}
+    if(t.dataset.fit)return;t.dataset.fit=1;t.classList.add('fit');const w=document.createElement('span');w.className='fitw';t.parentNode.insertBefore(w,t);w.appendChild(t);
+    t.addEventListener('input',()=>sizeFit(t));t.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&t.closest('.est,.card')&&!t.id.match(/jnext|evn|inotes/)){e.preventDefault()}});
+    t.addEventListener('click',()=>{const cs=getComputedStyle(t);if(t.scrollHeight>t.clientHeight+2||document.body.classList.contains('ro'))openText(t)});
+    if(document.body.classList.contains('ro'))t.readOnly=true;sizeFit(t)});
+  document.querySelectorAll('.cl3').forEach(el=>el.classList.toggle('cut',el.scrollHeight>el.clientHeight+2))}
+let _fitQ=0;new MutationObserver(()=>{if(_fitQ)return;_fitQ=requestAnimationFrame(()=>{_fitQ=0;fitAll()})}).observe(document.body,{childList:true,subtree:true});
+addEventListener('resize',()=>{document.querySelectorAll('textarea.fit').forEach(sizeFit);fitAll()});
+document.addEventListener('click',e=>{const el=e.target.closest('.cl3.cut');if(!el||el.closest('#tsheet,#nsheet'))return;
+  const tile=el.closest('[id^="t-"]');const job=tile&&tile.querySelector('a[href^="#job-"]');e.preventDefault();e.stopPropagation();
+  if(job&&el.classList.contains('t')){openNotes(job.getAttribute('href').slice(5));return}openText(el)},true);
+window.openText=src=>{let sh=$('#tsheet');if(!sh){sh=document.createElement('div');sh.id='tsheet';sh.onclick=e=>{if(e.target===sh)closeText()};document.body.appendChild(sh)}
+  const editable=src.tagName==='TEXTAREA'&&!src.readOnly&&!document.body.classList.contains('ro');
+  const lbl=src.dataset.label||FIT_LBL[src.id]||FIT_LBL[[...src.classList].find(c=>FIT_LBL[c])]||src.getAttribute('aria-label')||(src.closest('div')&&src.closest('div').previousElementSibling&&src.closest('div').previousElementSibling.tagName==='LABEL'?src.closest('div').previousElementSibling.textContent:'')||(src.previousElementSibling&&src.previousElementSibling.tagName==='LABEL'?src.previousElementSibling.textContent:'')||'Full note';
+  const val=src.tagName==='TEXTAREA'?src.value:src.textContent;
+  sh.innerHTML=`<div class="pn" role="dialog" aria-modal="true" aria-label="${esc(lbl)}"><div class="row"><div class="t grow" style="font-size:16px">${esc(lbl.replace(/›/g,'').trim())}</div><button class="b sm keep" onclick="closeText()">${editable?'Cancel':'Close'}</button></div>
+   ${editable?`<textarea id="tsedit">${esc(val)}</textarea><div class="btns"><button class="b p f keep" id="tsdone">Done</button></div>`:`<div class="txt">${esc(val)}</div>`}</div>`;
+  sh.classList.add('on');document.body.style.overflow='hidden';
+  if(editable){const ed=$('#tsedit');setTimeout(()=>ed.focus(),50);$('#tsdone').onclick=()=>{src.value=ed.value;src.dispatchEvent(new Event('input',{bubbles:true}));src.dispatchEvent(new Event('change',{bubbles:true}));sizeFit(src);closeText()}}};
+window.closeText=()=>{const sh=$('#tsheet');if(sh)sh.classList.remove('on');if(!($('#nsheet')||{}).classList?.contains('on'))document.body.style.overflow=''};
+addEventListener('keydown',e=>{if(e.key==='Escape')closeText()});addEventListener('hashchange',()=>closeText());
+
 /* ---------- FULL NOTES SHEET ---------- */
 window.openNotes=async id=>{let sh=$('#nsheet');if(!sh){sh=document.createElement('div');sh.id='nsheet';sh.onclick=e=>{if(e.target===sh)closeNotes()};document.body.appendChild(sh)}
   sh.innerHTML='<div class="pn" role="dialog" aria-modal="true" aria-label="Full notes"><div class="hd"><div class="t">Loading…</div><button class="b sm keep" onclick="closeNotes()">Close</button></div></div>';sh.classList.add('on');document.body.style.overflow='hidden';
@@ -418,8 +456,8 @@ const Job=guard(async id=>{status('Loading…');const [d,ests]=await Promise.all
   <div class="card" style="margin-top:8px"><div class="grid2"><div><label class="f" style="margin-top:0">Stage</label><select id="jstage">${[...STAGES,'Completed','Paid','Lost'].map(s=>`<option ${s===j.stage?'selected':''}>${s}</option>`).join('')}</select></div>
     <div><label class="f" style="margin-top:0">Priority</label><select id="jpri">${['Urgent','High','Normal','Low'].map(s=>`<option ${s===j.priority?'selected':''}>${s}</option>`).join('')}</select></div>
     <div><label class="f">Value ($)</label><input type="number" id="jval" value="${j.value??''}" inputmode="decimal"></div><div><label class="f">Next step due</label><input type="date" id="jdue" value="${j.next_action_due||''}"></div></div>
-    <label class="f" style="display:flex;justify-content:space-between">Next step<a href="javascript:void 0" class="keep" style="color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0" onclick="openNotes('${j.id}')">Full notes ›</a></label><textarea id="jnext" rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'">${esc(j.next_action||'')}</textarea>
-    ${j.scope?`<label class="f">Scope</label><div class="s" style="color:var(--text)">${esc(j.scope)}</div>`:''}
+    <label class="f" style="display:flex;justify-content:space-between">Next step<a href="javascript:void 0" class="keep" style="color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0" onclick="openNotes('${j.id}')">Full notes ›</a></label><textarea id="jnext" class="fit" aria-label="Next step">${esc(j.next_action||'')}</textarea>
+    ${j.scope?`<label class="f">Scope</label><div class="s cl3" data-label="Scope" style="color:var(--text)">${esc(j.scope)}</div>`:''}
     <div class="btns"><button class="b f" onclick="saveJob('${j.id}')">Save</button>${!j.proposal_sent_at&&['Inspection','Proposal Due','Lead'].includes(j.stage)?`<button class="b p f" onclick="markSent('${j.id}')">${ICON.send}Proposal sent</button>`:''}</div></div>
   ${d.inspections.length?`<h2>Inspections <span class="n">${d.inspections.length}</span></h2>`+d.inspections.map(i=>inspCard(i,j,c)).join(''):''}
   <h2>Estimate <span class="n">${d.estimates.length} option${d.estimates.length===1?'':'s'}</span></h2>
@@ -432,14 +470,14 @@ const Job=guard(async id=>{status('Loading…');const [d,ests]=await Promise.all
   <h2>Tasks <span class="n">${d.tasks.filter(t=>!t.done_at).length}</span></h2><div class="card">${d.tasks.map(t=>`<div class="task"><button class="chk ${t.done_at?'on':''}" aria-label="Mark done" onclick="doneTask('${t.id}',this)">${ICON.check}</button><div class="grow"><div class="t" style="font-size:14px;${t.done_at?'text-decoration:line-through;color:var(--muted)':''}">${esc(t.title)}</div><div class="s">${esc(fmtDue(t.due_at))} · ${esc(t.owner||'')}</div></div></div>`).join('')||'<div class="empty">No tasks.</div>'}
     <div class="sec row"><input type="text" id="ntask" class="grow" placeholder="Add a task, e.g. Call Friday"><button class="b" onclick="addTask('${j.id}','${c.id||''}')">Add</button></div></div>
   <h2>Log</h2><div class="card"><div class="row"><select id="nkind" style="width:110px;flex:none"><option value="call">Call</option><option value="text">Text</option><option value="meeting">Meeting</option><option value="note">Note</option><option value="email">Email</option></select><input type="text" id="nbody" class="grow" placeholder="What happened?"></div><div class="btns"><button class="b f" onclick="addNote('${j.id}','${c.id||''}')">Log it</button></div>
-    <div class="sec">${d.notes.map(n=>`<div class="note"><div class="s">${esc(n.kind)} · ${esc(fmtDue(n.happened_at))}${n.author?' · '+esc(n.author):''}</div><div style="white-space:pre-wrap">${esc(n.body)}</div></div>`).join('')||'<div class="empty">Nothing logged yet.</div>'}</div></div>
+    <div class="sec">${d.notes.map(n=>`<div class="note"><div class="s">${esc(n.kind)} · ${esc(fmtDue(n.happened_at))}${n.author?' · '+esc(n.author):''}</div><div class="cl3" data-label="${esc(n.kind)} note" style="white-space:pre-wrap">${esc(n.body)}</div></div>`).join('')||'<div class="empty">Nothing logged yet.</div>'}</div></div>
   ${d.other_jobs.length?`<h2>Other jobs</h2><div class="stack">${d.other_jobs.map(o=>`<a class="card" style="display:block" href="#job-${o.id}"><div class="t">${esc(o.title)}</div><div class="s">${esc(o.stage)}</div></a>`).join('')}</div>`:''}`;
-  startClocks();{const n=$('#jnext');if(n){n.style.height='auto';n.style.height=n.scrollHeight+'px'}}if(window.afterJob)afterJob(d);
+  startClocks();if(window.afterJob)afterJob(d);
   sql(`select crm.roofly_code(${q(j.id)}) as c`).then(r=>{const b=$('#rflBtn');if(b&&r[0])b.href=roofly(j,c,r[0].c)}).catch(()=>{})});
 function inspCard(i,j,c){const f=i.findings||{};const items=f.findings||[];return `<div class="card" style="margin-top:8px"><div class="row"><div class="grow"><div class="t">${i.source==='roofly'?'Roofly report':'Walk-around'} · ${esc(fmtDue(i.recorded_at))}</div><div class="s">${i.source==='roofly'?(i.estimate_total?'Recommended '+money(i.estimate_total):'Report built'):(i.frame_count||0)+' frames · '+(i.transcript?'narration transcribed':'narration pending')} · ${esc(i.status.replace('_',' '))}</div></div>${i.report_url?`<a class="b sm" href="${esc(i.report_url)}" target="_blank" rel="noopener">Open report</a>`:''}</div>
   ${(i.thumbs||[]).length?`<div class="thumbs">${i.thumbs.slice(0,8).map(b=>`<img alt="" src="data:image/jpeg;base64,${b}">`).join('')}</div>`:''}
-  ${f.summary?`<div class="sec"><div class="t" style="font-size:14px">Summary</div><div class="s" style="color:var(--text)">${esc(f.summary)}</div></div>`:''}
-  ${items.length?`<div class="sec">${items.map(x=>`<div class="find"><span class="pill ${x.severity==='high'?'red':x.severity==='medium'?'amber':''}">${esc(x.severity||'')}</span> <b style="font-weight:500">${esc(x.area||'')}</b><div class="s" style="color:var(--text)">${esc(x.issue||'')}</div></div>`).join('')}</div>`:''}
+  ${f.summary?`<div class="sec"><div class="t" style="font-size:14px">Summary</div><div class="s cl3" data-label="Inspection summary" style="color:var(--text)">${esc(f.summary)}</div></div>`:''}
+  ${items.length?`<div class="sec">${items.map(x=>`<div class="find"><span class="pill ${x.severity==='high'?'red':x.severity==='medium'?'amber':''}">${esc(x.severity||'')}</span> <b style="font-weight:500">${esc(x.area||'')}</b><div class="s cl3" data-label="${esc(x.area||'Finding')}" style="color:var(--text)">${esc(x.issue||'')}</div></div>`).join('')}</div>`:''}
   ${i.proposal_draft!=null?`<div class="sec"><label class="f" style="margin-top:0">Proposal draft (edit, then send)</label><textarea id="pd-${i.id}" style="min-height:220px">${esc(i.proposal_draft)}</textarea>
    <div class="btns"><button class="b f" onclick="saveDraft('${i.id}')">Save draft</button>${mcp&&(c.emails||[]).length?`<button class="b f" onclick="gmailDraft('${i.id}','${j.id}')">${ICON.mail}Gmail draft</button>`:''}<button class="b p f" onclick="markSent('${j.id}','${i.id}')">${ICON.send}Mark sent</button></div></div>`:''}</div>`}
 window.saveJob=async id=>{try{await sql(`update crm.jobs set stage=${q($('#jstage').value)},priority=${q($('#jpri').value)},value=${$('#jval').value?Number($('#jval').value):'null'},next_action=${q($('#jnext').value)},next_action_due=${q($('#jdue').value)} where id=${q(id)}; select 1`);status('Saved ✓');cache.pipe=null}catch(e){status('Could not save: '+e.message)}};
