@@ -72,19 +72,32 @@ window.openClover=()=>{let d=$('#clsheet');if(!d){d=document.createElement('div'
    <div class="clvchips" id="clvchips">${CLV_Q.map((x,i)=>`<button class="b sm keep" onclick="askClover(CLV_Q[${i}])">${esc(x)}</button>`).join('')}</div>
    <form class="clvin" onsubmit="event.preventDefault();askClover($('#clvq').value)"><input type="text" id="clvq" class="grow" placeholder="Ask Clover…" autocomplete="off" enterkeyhint="send"><button class="b p keep" type="submit">Send</button></form></div>`;
   d.classList.add('on');renderClv();if(!clvLog.length)addClv('c','Hey, I\'m Clover 🍀 Tap a question below or type your own. I can see your live numbers, so my answers are about your week, not generic advice.')};
-window.closeClover=()=>{const d=$('#clsheet');if(d)d.classList.remove('on')};
+window.closeClover=()=>{const d=$('#clsheet');if(d)d.classList.remove('on');const c=clvConv;clvConv=null;if(c){try{c.endSession()}catch(e){}}};
 function addClv(who,text){clvLog.push({who,text});renderClv()}
 function renderClv(){const m=$('#clvmsgs');if(!m)return;m.innerHTML=clvLog.map(x=>`<div class="clvm ${x.who==='u'?'u':'c'}">${esc(x.text)}</div>`).join('');m.scrollTop=m.scrollHeight}
-async function juicyBrain(qq){/* Justin's own Juicy AI, only inside his Claude session */
-  if(hosted)return [];const w=(qq.toLowerCase().match(/[a-z]{4,}/g)||[]).filter(x=>!/^(what|when|where|which|with|that|this|have|help|should|could|would|about|more|better|first|today|need|think|from|your|they|them|does|make|into)$/.test(x)).slice(0,6);
-  if(!w.length)return [];try{const r=await sql(`select title, left(content,700) as content from public.search_juicy(${q(w.join(' or '))}, null, 4, array['note','voice_memo','drive_file'])`);return r||[]}catch(e){return []}}
+/* Juicy AI brain (memory palace from every project + notes, voice memos, Drive; never texts or contacts) */
+async function juicyBrain(qq){if(hosted)return [];const w=(qq.toLowerCase().match(/[a-z0-9]{3,}/g)||[]).filter(x=>!/^(what|when|where|which|with|that|this|have|help|should|could|would|about|more|better|first|today|need|think|from|your|they|them|does|make|into|how|can|the|and|for|are|you|get|our|out)$/.test(x)).slice(0,8);
+  if(!w.length)return [];try{const r=await sql(`select title, snippet as content from public.brain_search(${q(w.join(' or '))}, null, 25) where kind='palace' or wing in ('note','voice_memo','drive_file') limit 8`);return r||[]}catch(e){return []}}
+/* Website: Clover is a text-only ElevenLabs agent (like Skye) that searches the Juicy AI brain itself */
+const CLV_AGENT='agent_9001m6pcy3yjfjc9ah71qxsq931p';let clvConv=null,clvWait=null,clvStarting=null;
+function clvLib(){return window.ElevenLabsClient?Promise.resolve():new Promise((ok,no)=>{const sc=document.createElement('script');sc.src='vendor/elevenlabs/client-1.32.1.js';sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)})}
+function clvStatsText(s){if(!s)return '';return `Live CRM numbers for this rep this week: ${+s.late_proposals||0} proposals past the 60-minute clock, ${+s.late_tasks||0} overdue tasks, ${+s.proposals_week||0} proposals sent (${+s.on_time_week||0} within 60 minutes), ${+s.reports_week||0} video reports, ${+s.tasks_done_week||0} tasks done, about ${Math.round(+s.saved_min||0)} minutes saved by the CRM. Training library: ${(s.training||[]).map(x=>x.title).join('; ')||'none yet'}. Signed in as ${(typeof session!=='undefined'&&session&&session.email)||'a team member'}.`}
+async function clvStart(s){if(clvConv)return clvConv;if(clvStarting)return clvStarting;
+  clvStarting=(async()=>{await clvLib();const {Conversation}=window.ElevenLabsClient;
+    const c=await Conversation.startSession({agentId:CLV_AGENT,textOnly:true,connectionType:'websocket',
+      onMessage:m=>{if((m.role||m.source)==='user')return;const t=String(m.message||'').trim();if(!t)return;if(clvWait){const w=clvWait;clvWait=null;w(t)}else{addClv('c',t)}},
+      onDisconnect:()=>{clvConv=null},onError:()=>{}});
+    clvConv=c;try{const t=clvStatsText(s);if(t)c.sendContextualUpdate(t)}catch(e){}return c})();
+  try{return await clvStarting}finally{clvStarting=null}}
+async function clvAgentAsk(qq,s){const c=await clvStart(s);return await new Promise((ok,no)=>{const to=setTimeout(()=>{clvWait=null;no(new Error('timeout'))},45000);clvWait=t=>{clearTimeout(to);ok(t)};try{c.sendUserMessage(qq)}catch(e){clearTimeout(to);clvWait=null;no(e)}})}
 window.askClover=async qq=>{qq=(qq||'').trim();if(!qq)return;const i=$('#clvq');if(i)i.value='';addClv('u',qq);addClv('c','Thinking…');
   let s=cache.stats;try{s=(await loadStats())||s}catch(e){}
   let ans='';
-  if(!hosted){if(!sampler){try{sampler=await claude.use('sample')}catch(e){}}
+  if(hosted){try{ans=await clvAgentAsk(qq,s)}catch(e){clvConv=null}}
+  else{if(!sampler){try{sampler=await claude.use('sample')}catch(e){}}
     if(sampler){try{const brain=await juicyBrain(qq);const lib=(s&&s.training||[]).map(x=>x.title+' ('+(x.kind||'link')+'): '+x.url).join('\n');
       const hist=clvLog.slice(-9,-1).map(x=>(x.who==='u'?'Rep: ':'Clover: ')+x.text).join('\n');
-      const r=await sampler(`You are Clover, the upbeat four-leaf-clover sales coach inside Lucky Line Roofing's CRM (Montana). Coach roofing sales reps. Answer in 3-6 short plain sentences or a short numbered list, concrete and specific to their numbers. No markdown headers. Core rules of the house: proposal out within 60 minutes of the inspection (Alden closes ~80% this way), work the reddest urgency circles first, record the walk-around video so the report writes itself, follow up day 5 and day 21.\n\nThis week's live CRM stats (JSON): ${JSON.stringify(s||{})}\n\nTraining library:\n${lib||'(none yet)'}\n\nNotes from Justin's Juicy AI brain that may help (use only if relevant, never quote private details):\n${brain.map(b=>'- '+(b.title||'')+': '+b.content).join('\n')||'(none)'}\n\nConversation so far:\n${hist}\n\nRep's question: ${qq}`,{modelTier:'default'});ans=(r&&r.text||'').trim()}catch(e){}}}
+      const r=await sampler(`You are Clover, the upbeat four-leaf-clover sales coach inside Lucky Line Roofing's CRM (Montana), built from Justin Walton's Juicy AI brain: his life's work, his projects, how he sells and communicates. Speak in his spirit: warm, direct, generous, a little playful. Answer in 2-6 short plain sentences or a short numbered list, concrete and specific to their numbers. No markdown. House rules: proposal out within 60 minutes of the inspection (Alden closes ~80% this way), 3 options, proposals are honest education not scare tactics, work the reddest urgency circle first, record the walk-around video, follow up day 5 and day 21.\nPrivacy: never reveal private details about Justin's family, health, money, relationships, or any private person; turn personal material into general wisdom.\n\nThis week's live CRM stats (JSON): ${JSON.stringify(s||{})}\n\nTraining library:\n${lib||'(none yet)'}\n\nFrom Justin's Juicy AI brain (use what helps, never mention where it came from):\n${brain.map(b=>'- '+(b.title||'')+': '+b.content).join('\n')||'(nothing matched)'}\n\nConversation so far:\n${hist}\n\nRep's question: ${qq}`,{modelTier:'default'});ans=(r&&r.text||'').trim()}catch(e){}}}
   if(!ans)ans=cloverLocal(qq,s||{});
   clvLog.pop();addClv('c',ans)};
 function cloverLocal(qq,s){qq=qq.toLowerCase();const lt=+s.late_tasks||0,lp=+s.late_proposals||0,on=+s.on_time_week||0,sent=+s.proposals_week||0;
