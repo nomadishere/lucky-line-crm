@@ -57,3 +57,13 @@ code.lk{display:block;font:500 11px 'JetBrains Mono',monospace;background:rgba(2
 label.b svg{flex:none}
 /* view-only logins: hide everything that changes data */
 body.ro .sw,body.ro label.b,body.ro #micBtn,body.ro .acts .chip{display:none!important}
+/* stats ticker (front of the urgency circles) + stats page */
+.tick{flex:none;align-self:center;display:flex;flex-direction:column;gap:2px;padding:7px 10px;border-radius:14px;background:var(--panel);border:1px solid var(--border);font:700 11px Inter;letter-spacing:-.01em;min-width:86px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.tick .tk{display:flex;justify-content:space-between;gap:6px;white-space:nowrap}
+.tick em{font:500 9.5px Inter;font-style:normal;color:var(--muted)}
+.up{color:var(--green)}.dn{color:var(--red)}
+.stk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:6px}
+.stk b{display:block;font:700 19px Inter;letter-spacing:-.04em;white-space:nowrap}.stk span{font-size:11px;color:var(--muted)}
+.lbr{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--border)}.lbr:first-child{border-top:0}
+.lbr .rk{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--panel2);font:700 11px Inter;flex:none}
+.lbr .sc{font:700 15px Inter;min-width:28px;text-align:right}

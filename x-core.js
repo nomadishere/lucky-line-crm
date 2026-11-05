@@ -82,6 +82,7 @@ const More=guard(async()=>{const m=await moreData(true).catch(()=>({counts:{}}))
    ${tl('#inspect',XI.video,'Inspect','Walk-around video or Roofly report')}
    ${tl('#people',XI.people,'People','Customers, vendors, partners')}
    ${tl('#inbox',XI.chat,'Texts','Every text with every customer')}
+   ${tl('#stats',XI.chart,'Stats & training','Time saved, leaderboard, coaching')}
    ${tl('#reports',XI.chart,'Reports','Win rate, speed, money in')}
    ${tl('#invoices',XI.inv,'Invoices',((m.counts||{}).invoices_open||0)+' waiting on payment')}
    ${tl('#automations',XI.bolt,'Automations','Follow-ups that make themselves')}
