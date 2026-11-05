@@ -302,9 +302,8 @@ input[type=url]{width:100%;min-height:38px;border-radius:12px;border:1px solid v
 html.daymode input[type=url]{background:#fff}
 /* iPhone zooms the whole page when you tap a box with text under 16px; stop that on phones and iPads */
 @media (pointer:coarse){input,select,textarea{font-size:16px!important}}
-/* urgency circles: whole circles snap into place, the right edge fades so a cut circle reads as "swipe for more" */
-.orbs{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);padding-right:30px}
-.orbs.end{-webkit-mask-image:none;mask-image:none}
+/* urgency row stays inside the top bar so it never sits over page buttons */
+.top .orbs{margin-bottom:0}
 /* narrow phones (most Androids are 360-412 wide): tighter top bar so page titles are not cut off */
 @media (max-width:400px){.toprow{gap:6px}.toprow .ib{width:34px;height:34px}.vt{font-size:14px!important}}
 @media (max-width:370px){.toprow .ib{width:32px;height:32px}.toprow .ib svg{width:16px;height:16px}}
@@ -402,7 +401,6 @@ function go(){if(hosted&&!session){Login();return}const routes=Object.assign({to
 }
 addEventListener('hashchange',go);
 addEventListener('keydown',e=>{if(e.key==='Escape'){window.closeText&&closeText();window.closeNotes&&closeNotes()}});
-(()=>{const o=document.getElementById('orbs');if(!o)return;const f=()=>o.classList.toggle('end',o.scrollLeft+o.clientWidth>=o.scrollWidth-4);o.addEventListener('scroll',f,{passive:true});new MutationObserver(f).observe(o,{childList:true});addEventListener('resize',f)})();
 
 function guard(fnc){return async(...a)=>{try{await fnc(...a)}catch(e){if(/Not a Juicy CRM team member/.test(e.message||'')){V.innerHTML=`<div class="card"><div class="t">This login is switched off</div><div class="s" style="margin-top:6px">You're signed in as ${esc(session&&session.email||'someone else')}. Sign out and sign in with your own login.</div><div class="btns"><button class="b p keep" onclick="signOut()">Sign out</button></div></div>`;status('Switched off');return}V.innerHTML=`<div class="card"><div class="t">Can't reach your database right now</div><div class="s" style="margin-top:6px">${esc(e.message==='offline'?'Open this page in Claude (signed in as Justin) so it can use your Supabase connection.':e.message)}</div><div class="btns"><button class="b p keep" onclick="go()">Try again</button></div></div>`;status('Offline')}}}
 
