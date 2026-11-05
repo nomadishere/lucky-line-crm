@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" role="img" aria-label="Clvr, the four-leaf clover coach">
+  <defs>
+    <linearGradient id="lf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b8f56a"/><stop offset="1" stop-color="#17b673"/></linearGradient>
+    <linearGradient id="lf2" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a6ef5f"/><stop offset="1" stop-color="#119d62"/></linearGradient>
+  </defs>
+  <!-- stem legs + sneakers -->
+  <path d="M55 96 Q52 112 46 122" stroke="#139a5f" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M65 96 Q68 112 74 122" stroke="#139a5f" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M36 124 q10 -8 16 0 q-6 4 -16 0z" fill="#ffffff" stroke="#0f1520" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M68 124 q6 -8 16 0 q-10 4 -16 0z" fill="#ffffff" stroke="#0f1520" stroke-width="2.2" stroke-linejoin="round"/>
+  <!-- waving arm (left) and pointer arm (right) -->
+  <path d="M30 70 Q16 62 14 46" stroke="#139a5f" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  <circle cx="14" cy="43" r="5" fill="#c8f77e" stroke="#0f1520" stroke-width="2"/>
+  <path d="M90 72 Q104 74 110 64" stroke="#139a5f" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  <circle cx="111" cy="61" r="4.6" fill="#c8f77e" stroke="#0f1520" stroke-width="2"/>
+  <!-- four heart-shaped leaves -->
+  <g stroke="#0f1520" stroke-width="2.4" stroke-linejoin="round">
+    <path transform="translate(60 60) rotate(-45)" d="M0 0 C-6 -9 -22 -15 -22 -29 C-22 -38 -12 -42 -5 -37 C-3 -35.5 -1 -33 0 -31 C1 -33 3 -35.5 5 -37 C12 -42 22 -38 22 -29 C22 -15 6 -9 0 0z" fill="url(#lf)"/>
+    <path transform="translate(60 60) rotate(-45)" d="M0 -6 L0 -30" stroke="#0e8a55" stroke-width="1.6" fill="none" opacity=".55"/>
+    <path transform="translate(60 60) rotate(45)" d="M0 0 C-6 -9 -22 -15 -22 -29 C-22 -38 -12 -42 -5 -37 C-3 -35.5 -1 -33 0 -31 C1 -33 3 -35.5 5 -37 C12 -42 22 -38 22 -29 C22 -15 6 -9 0 0z" fill="url(#lf2)"/>
+    <path transform="translate(60 60) rotate(45)" d="M0 -6 L0 -30" stroke="#0e8a55" stroke-width="1.6" fill="none" opacity=".55"/>
+    <path transform="translate(60 60) rotate(135)" d="M0 0 C-6 -9 -22 -15 -22 -29 C-22 -38 -12 -42 -5 -37 C-3 -35.5 -1 -33 0 -31 C1 -33 3 -35.5 5 -37 C12 -42 22 -38 22 -29 C22 -15 6 -9 0 0z" fill="url(#lf)"/>
+    <path transform="translate(60 60) rotate(135)" d="M0 -6 L0 -30" stroke="#0e8a55" stroke-width="1.6" fill="none" opacity=".55"/>
+    <path transform="translate(60 60) rotate(225)" d="M0 0 C-6 -9 -22 -15 -22 -29 C-22 -38 -12 -42 -5 -37 C-3 -35.5 -1 -33 0 -31 C1 -33 3 -35.5 5 -37 C12 -42 22 -38 22 -29 C22 -15 6 -9 0 0z" fill="url(#lf2)"/>
+    <path transform="translate(60 60) rotate(225)" d="M0 -6 L0 -30" stroke="#0e8a55" stroke-width="1.6" fill="none" opacity=".55"/>
+  </g>
+  <!-- face -->
+  <ellipse cx="60" cy="62" rx="19" ry="17" fill="#d9fb9c" stroke="#0f1520" stroke-width="2.4"/>
+  <!-- cool shades -->
+  <path d="M43 56 h14 a2 2 0 0 1 2 2 q-1 8 -9 8 q-8 0 -8 -8z" fill="#0f1520"/>
+  <path d="M63 56 h14 q0 0 0 2 q-1 8 -8 8 q-8 0 -9 -8 a2 2 0 0 1 2 -2z" fill="#0f1520"/>
+  <path d="M57 58 h6" stroke="#0f1520" stroke-width="2.4"/>
+  <path d="M46 59 l4 0" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity=".8"/>
+  <path d="M66 59 l4 0" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity=".8"/>
+  <!-- big grin + cheeks -->
+  <path d="M51 69 Q60 77 69 69" stroke="#0f1520" stroke-width="2.6" fill="#ffffff" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="45" cy="69" r="3" fill="#ff8fa3" opacity=".7"/>
+  <circle cx="75" cy="69" r="3" fill="#ff8fa3" opacity=".7"/>
+  <!-- sparkle -->
+  <path d="M100 22 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2z" fill="#ffd36b"/>
+</svg>

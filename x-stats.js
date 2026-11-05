@@ -23,12 +23,17 @@ function canEdit(){return !document.body.classList.contains('ro')}
 const Stats=guard(async()=>{status('Crunching…');const s=await loadStats(true);status('Stats · this week');
   const net=(+s.saved_min||0)-(+s.behind_min||0),mins=s.minutes||{};const board=(s.board||[]).map(b=>({...b,score:(+b.done||0)+3*(+b.sent||0)+5*(+b.ontime||0)})).sort((a,b)=>b.score-a.score);
   const lib=Array.isArray(s.training)?s.training:[];
-  V.innerHTML=`<div class="card"><div class="k">This week</div>
+  const T=tips(s);window._tips=T;window._tipI=0;const feat=lib.find(x=>x.featured)||lib.find(x=>/video/i.test(x.kind||''));
+  V.innerHTML=`<div class="card coach"><img class="mascot" src="img/clvr.svg" alt="Clvr, the four-leaf clover sales coach" width="96" height="112">
+   <div class="bubble"><div class="k">Clvr says</div><div class="t" id="tipH">${esc(T[0].h)}</div><div class="s" id="tipB" style="color:var(--text);margin-top:4px">${esc(T[0].b)}</div>
+   ${T.length>1?`<button class="b sm keep" style="margin-top:8px" onclick="nextTip()">Next tip ›</button>`:''}</div></div>
+  ${feat?`<a class="card feat" href="${esc(feat.url)}" target="_blank" rel="noopener"><span class="play" aria-hidden="true">▶</span><div class="grow"><div class="k">Start here</div><div class="t">${esc(feat.title)}</div><div class="s">${esc(feat.kind||'Video')} · opens in Google Drive</div></div></a>`:''}
+  <div class="card" style="margin-top:8px"><div class="k">This week</div>
    <div class="stk"><div><b class="up">▲ ${hm(s.saved_min)}</b><span>saved by the CRM</span></div><div><b class="dn">▼ ${hm(s.behind_min)}</b><span>behind on proposals</span></div><div><b class="${net>=0?'up':'dn'}">${net>=0?'+':'−'}${hm(net)}</b><span>net</span></div></div>
    <div class="s" style="margin-top:8px">Saved = ${s.proposals_week} proposals × ${mins.proposal||45}m + ${s.reports_week} video reports × ${mins.report||60}m + ${s.auto_tasks_week} automatic follow-ups × ${mins.auto_task||5}m + ${s.tasks_done_week} tasks done × ${mins.task_done||3}m. Behind = how far past the 60-minute clock the open proposals are (max 24h each). These are estimates.</div></div>
 
-  <h2>How to get better <span class="n">${tips(s).length}</span></h2>
-  <div class="stack">${tips(s).map(x=>`<div class="card"><div class="t">${esc(x.h)}</div><div class="s cl3" data-label="${esc(x.h)}" style="color:var(--text);margin-top:4px">${esc(x.b)}</div></div>`).join('')}</div>
+  <h2>All tips <span class="n">${T.length}</span></h2>
+  <div class="stack">${T.map(x=>`<div class="card"><div class="t">${esc(x.h)}</div><div class="s cl3" data-label="${esc(x.h)}" style="color:var(--text);margin-top:4px">${esc(x.b)}</div></div>`).join('')}</div>
 
   <h2>Leaderboard <span class="n">opt-in</span></h2>
   <div class="card">${board.length?board.map((b,i)=>`<div class="lbr"><span class="rk">${i+1}</span><span class="grow t">${esc(b.name)}</span><span class="s">${b.done} done · ${b.sent} sent · ${b.ontime} on time</span><b class="sc">${b.score}</b></div>`).join(''):'<div class="s">Nobody has joined yet. Contests and the leaderboard only show people who opt in.</div>'}
@@ -38,8 +43,9 @@ const Stats=guard(async()=>{status('Crunching…');const s=await loadStats(true)
   <h2>Sales training <span class="n">${lib.length}</span></h2>
   <div class="stack">${lib.map((x,i)=>`<div class="card row"><div class="grow"><div class="t">${esc(x.title)}</div><div class="s">${esc(x.kind||'Link')}</div></div><a class="b sm keep" href="${esc(x.url)}" target="_blank" rel="noopener">Open</a>${canEdit()?`<button class="b sm ic" aria-label="Remove" onclick="delTraining(${i})">✕</button>`:''}</div>`).join('')||'<div class="card empty">No training added yet.</div>'}</div>
   ${canEdit()?`<div class="card" style="margin-top:8px"><label class="f" style="margin-top:0">Add a training doc or video</label><input type="text" id="trt" placeholder="Title, e.g. Closing on the first visit"><div class="grid2"><div><input type="url" id="tru" placeholder="https://…" style="margin-top:6px"></div><div><select id="trk" style="margin-top:6px"><option>Video</option><option>Doc</option><option>Script</option><option>Course</option></select></div></div><div class="btns"><button class="b p f" onclick="addTraining()">Add to training</button></div></div>`:''}`});
+window.nextTip=()=>{const T=window._tips||[];if(!T.length)return;window._tipI=(window._tipI+1)%T.length;const x=T[window._tipI];$('#tipH').textContent=x.h;$('#tipB').textContent=x.b;const m=document.querySelector('.mascot');if(m){m.classList.remove('hop');void m.offsetWidth;m.classList.add('hop')}};
 window.optBoard=async on=>{try{await sql(`select crm.set_leaderboard(${on?'true':'false'}) as ok`);cache.stats=null;Stats()}catch(e){status('Could not update: '+e.message)}};
 async function saveTraining(list){await sql(`insert into crm.settings(key,value) values ('training',${q(JSON.stringify(list))}) on conflict (key) do update set value=excluded.value, updated_at=now(); select 1`);cache.stats=null;Stats()}
 window.addTraining=async()=>{const t=$('#trt').value.trim(),u=$('#tru').value.trim(),k=$('#trk').value;if(!t||!/^https?:\/\//.test(u)){status('Add a title and a link that starts with https://');return}const s=await loadStats(true);await saveTraining([...(s.training||[]),{title:t,url:u,kind:k}])};
 window.delTraining=async i=>{const s=await loadStats(true);const l=[...(s.training||[])];l.splice(i,1);await saveTraining(l)};
-Object.assign(window.XROUTES,{stats:Stats});Object.assign(window.XTITLES||(window.XTITLES={}),{stats:'Stats & training'});
+Object.assign(window.XROUTES,{stats:Stats});Object.assign(window.XTITLES||(window.XTITLES={}),{stats:'Stats & tips'});

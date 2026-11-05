@@ -69,3 +69,11 @@ body.ro .sw,body.ro label.b,body.ro #micBtn,body.ro .acts .chip{display:none!imp
 .lbr{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--border)}.lbr:first-child{border-top:0}
 .lbr .rk{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--panel2);font:700 11px Inter;flex:none}
 .lbr .sc{font:700 15px Inter;min-width:28px;text-align:right}
+.coach{display:flex;gap:10px;align-items:flex-end;overflow:hidden}
+.coach .mascot{flex:none;width:96px;height:112px;animation:hop 2.6s ease-in-out 1}
+.coach .mascot.hop{animation:hop .7s ease-in-out 1}
+@keyframes hop{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-8px) rotate(-4deg)}60%{transform:translateY(0) rotate(3deg)}}
+@media (prefers-reduced-motion:reduce){.coach .mascot,.coach .mascot.hop{animation:none}}
+.coach .bubble{flex:1;min-width:0;position:relative;background:var(--panel2);border:1px solid var(--border2);border-radius:16px 16px 16px 4px;padding:10px 12px;align-self:center}
+.feat{display:flex;gap:12px;align-items:center;margin-top:8px}
+.feat .play{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#0a0b12;font-size:16px;padding-left:3px}
