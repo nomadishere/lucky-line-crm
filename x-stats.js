@@ -6,7 +6,7 @@ function hm(min){min=Math.round(Math.abs(+min||0));const h=Math.floor(min/60),m=
 async function loadStats(force){if(force||!cache.stats||Date.now()-statsAt>120000){cache.stats=await fn('crm.app_stats()');statsAt=Date.now()}return cache.stats}
 function tickerHTML(s){if(!s)return '';const net=(+s.saved_min||0)-(+s.behind_min||0);
   return `<a class="tick" href="#stats" aria-label="Stats and training: ${hm(s.saved_min)} saved, ${hm(s.behind_min)} behind this week">
-   <span class="tk up">▲ ${hm(s.saved_min)}<em>saved</em></span><span class="tk dn">▼ ${hm(s.behind_min)}<em>behind</em></span><span class="tk ${net>=0?'up':'dn'}">${net>=0?'+':'−'}${hm(net)}<em>net</em></span></a>`}
+   <small class="tklbl">Stats &amp; tips</small><span class="tbox"><span class="tk up">▲ ${hm(s.saved_min)}<em>saved</em></span><span class="tk dn">▼ ${hm(s.behind_min)}<em>behind</em></span><span class="tk ${net>=0?'up':'dn'}">${net>=0?'+':'−'}${hm(net)}<em>net</em></span></span></a>`}
 /* put the ticker in front of the urgency circles every time they are drawn */
 const _drawOrbs=window.drawOrbs;
 window.drawOrbs=function(d){_drawOrbs(d);const o=$('#orbs');if(!o)return;if(cache.stats)o.insertAdjacentHTML('afterbegin',tickerHTML(cache.stats));

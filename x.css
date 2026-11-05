@@ -58,7 +58,9 @@ label.b svg{flex:none}
 /* view-only logins: hide everything that changes data */
 body.ro .sw,body.ro label.b,body.ro #micBtn,body.ro .acts .chip{display:none!important}
 /* stats ticker (front of the urgency circles) + stats page */
-.tick{flex:none;align-self:center;display:flex;flex-direction:column;gap:2px;padding:7px 10px;border-radius:14px;background:var(--panel);border:1px solid var(--border);font:700 11px Inter;letter-spacing:-.01em;min-width:86px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.tick{flex:none;align-self:center;display:flex;flex-direction:column;align-items:stretch;gap:3px;font:700 11px Inter;letter-spacing:-.01em;min-width:86px}
+.tick .tklbl{font:600 8.5px Inter;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:center;line-height:1}
+.tick .tbox{display:flex;flex-direction:column;gap:2px;padding:7px 10px;border-radius:14px;background:var(--panel);border:1px solid var(--border);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 .tick .tk{display:flex;justify-content:space-between;gap:6px;white-space:nowrap}
 .tick em{font:500 9.5px Inter;font-style:normal;color:var(--muted)}
 .up{color:var(--green)}.dn{color:var(--red)}
