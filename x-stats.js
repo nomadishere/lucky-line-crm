@@ -33,7 +33,7 @@ const Stats=guard(async()=>{status('Crunching…');const s=await loadStats(true)
   const net=(+s.saved_min||0)-(+s.behind_min||0),mins=s.minutes||{};const board=(s.board||[]).map(b=>({...b,score:(+b.done||0)+3*(+b.sent||0)+5*(+b.ontime||0)})).sort((a,b)=>b.score-a.score);
   const lib=Array.isArray(s.training)?s.training:[];
   const T=tips(s);window._tips=T;window._tipI=0;const feat=lib.find(x=>x.featured)||lib.find(x=>/video/i.test(x.kind||''));
-  V.innerHTML=`<div class="card coach"><img class="mascot" src="img/clvr.svg" alt="Clvr, the four-leaf clover sales coach" width="96" height="112">
+  V.innerHTML=`${cloverBtnHTML()}<div class="card coach"><img class="mascot" src="img/clvr.svg" alt="Clvr, the four-leaf clover sales coach" width="96" height="112">
    <div class="bubble"><div class="k">Clvr says</div><div class="t" id="tipH">${esc(T[0].h)}</div><div class="s" id="tipB" style="color:var(--text);margin-top:4px">${esc(T[0].b)}</div>
    ${T.length>1?`<button class="b sm keep" style="margin-top:8px" onclick="nextTip()">Next tip ›</button>`:''}</div></div>
   ${feat?`<a class="card feat" href="${esc(feat.url)}" target="_blank" rel="noopener"><span class="play" aria-hidden="true">▶</span><div class="grow"><div class="k">Start here</div><div class="t">${esc(feat.title)}</div><div class="s">${esc(feat.kind||'Video')} · opens in Google Drive</div></div></a>`:''}
@@ -58,3 +58,40 @@ async function saveTraining(list){await sql(`insert into crm.settings(key,value)
 window.addTraining=async()=>{const t=$('#trt').value.trim(),u=$('#tru').value.trim(),k=$('#trk').value;if(!t||!/^https?:\/\//.test(u)){status('Add a title and a link that starts with https://');return}const s=await loadStats(true);await saveTraining([...(s.training||[]),{title:t,url:u,kind:k}])};
 window.delTraining=async i=>{const s=await loadStats(true);const l=[...(s.training||[])];l.splice(i,1);await saveTraining(l)};
 Object.assign(window.XROUTES,{stats:Stats});Object.assign(window.XTITLES||(window.XTITLES={}),{stats:'Stats & tips'});
+
+/* ---------- Talk to Clover: nickel-sized mascot button → chat (Nov 5 2026) ----------
+   Inside Claude: answers with Claude, using live CRM stats + the training library + Justin's Juicy AI brain
+   (notes, voice memos, Drive files only; never texts or contacts). On the website: built-in coaching answers
+   from the same live stats, no AI cost. */
+const CLV_Q=['How can I close more deals?','Help me manage my time better','What should I do first today?','How do I handle "I need to think about it"?','How do I get proposals out within 60 minutes?'];
+let clvLog=[];
+function cloverBtnHTML(){return `<button class="clvbtn keep" onclick="openClover()" aria-label="Click to talk to Clover"><span class="clvcoin"><img src="img/clvr.svg" alt="" width="56" height="65"></span><span class="clvtx"><b>Click to talk to Clover</b><small>Your sales coach. Ask anything.</small></span></button>`}
+window.openClover=()=>{let d=$('#clsheet');if(!d){d=document.createElement('div');d.id='clsheet';document.body.appendChild(d);d.addEventListener('click',e=>{if(e.target===d)closeClover()})}
+  d.innerHTML=`<div class="pn" role="dialog" aria-modal="true" aria-label="Chat with Clover"><div class="clvhd"><img src="img/clvr.svg" alt="" width="40" height="47"><div class="grow"><div class="t">Clover</div><div class="s">Lucky Line sales coach</div></div><button class="b sm keep" onclick="closeClover()">Close</button></div>
+   <div id="clvmsgs" class="clvmsgs" aria-live="polite"></div>
+   <div class="clvchips" id="clvchips">${CLV_Q.map((x,i)=>`<button class="b sm keep" onclick="askClover(CLV_Q[${i}])">${esc(x)}</button>`).join('')}</div>
+   <form class="clvin" onsubmit="event.preventDefault();askClover($('#clvq').value)"><input type="text" id="clvq" class="grow" placeholder="Ask Clover…" autocomplete="off" enterkeyhint="send"><button class="b p keep" type="submit">Send</button></form></div>`;
+  d.classList.add('on');renderClv();if(!clvLog.length)addClv('c','Hey, I\'m Clover 🍀 Tap a question below or type your own. I can see your live numbers, so my answers are about your week, not generic advice.')};
+window.closeClover=()=>{const d=$('#clsheet');if(d)d.classList.remove('on')};
+function addClv(who,text){clvLog.push({who,text});renderClv()}
+function renderClv(){const m=$('#clvmsgs');if(!m)return;m.innerHTML=clvLog.map(x=>`<div class="clvm ${x.who==='u'?'u':'c'}">${esc(x.text)}</div>`).join('');m.scrollTop=m.scrollHeight}
+async function juicyBrain(qq){/* Justin's own Juicy AI, only inside his Claude session */
+  if(hosted)return [];const w=(qq.toLowerCase().match(/[a-z]{4,}/g)||[]).filter(x=>!/^(what|when|where|which|with|that|this|have|help|should|could|would|about|more|better|first|today|need|think|from|your|they|them|does|make|into)$/.test(x)).slice(0,6);
+  if(!w.length)return [];try{const r=await sql(`select title, left(content,700) as content from public.search_juicy(${q(w.join(' or '))}, null, 4, array['note','voice_memo','drive_file'])`);return r||[]}catch(e){return []}}
+window.askClover=async qq=>{qq=(qq||'').trim();if(!qq)return;const i=$('#clvq');if(i)i.value='';addClv('u',qq);addClv('c','Thinking…');
+  let s=cache.stats;try{s=(await loadStats())||s}catch(e){}
+  let ans='';
+  if(!hosted){if(!sampler){try{sampler=await claude.use('sample')}catch(e){}}
+    if(sampler){try{const brain=await juicyBrain(qq);const lib=(s&&s.training||[]).map(x=>x.title+' ('+(x.kind||'link')+'): '+x.url).join('\n');
+      const hist=clvLog.slice(-9,-1).map(x=>(x.who==='u'?'Rep: ':'Clover: ')+x.text).join('\n');
+      const r=await sampler(`You are Clover, the upbeat four-leaf-clover sales coach inside Lucky Line Roofing's CRM (Montana). Coach roofing sales reps. Answer in 3-6 short plain sentences or a short numbered list, concrete and specific to their numbers. No markdown headers. Core rules of the house: proposal out within 60 minutes of the inspection (Alden closes ~80% this way), work the reddest urgency circles first, record the walk-around video so the report writes itself, follow up day 5 and day 21.\n\nThis week's live CRM stats (JSON): ${JSON.stringify(s||{})}\n\nTraining library:\n${lib||'(none yet)'}\n\nNotes from Justin's Juicy AI brain that may help (use only if relevant, never quote private details):\n${brain.map(b=>'- '+(b.title||'')+': '+b.content).join('\n')||'(none)'}\n\nConversation so far:\n${hist}\n\nRep's question: ${qq}`,{modelTier:'default'});ans=(r&&r.text||'').trim()}catch(e){}}}
+  if(!ans)ans=cloverLocal(qq,s||{});
+  clvLog.pop();addClv('c',ans)};
+function cloverLocal(qq,s){qq=qq.toLowerCase();const lt=+s.late_tasks||0,lp=+s.late_proposals||0,on=+s.on_time_week||0,sent=+s.proposals_week||0;
+  const lib=(s.training||[]);const tr=lib.length?` Training to watch: "${lib[0].title}" in the library below.`:'';
+  if(/close|deal|win|sell|more sales/.test(qq))return `1. Speed wins: get the proposal out within 60 minutes of the inspection. ${sent?`This week ${on} of ${sent} went out on time.`:'No proposals sent yet this week.'}\n2. Give 3 priced options (good, better, best). Most people pick the middle.\n3. Ask for the signature on the spot: "Want me to get you on the schedule?"\n4. Follow up on day 5 and day 21. Most deals close on a follow-up, not the first call.${lp?`\n5. Right now ${lp} proposal${lp>1?'s are':' is'} past the clock. Send those first.`:''}${tr}`;
+  if(/time|busy|overwhelm|manage|organi/.test(qq))return `1. Start each day on Today and clear the reddest circle first.${lt?` You have ${lt} overdue task${lt>1?'s':''}.`:' Nothing overdue right now, nice.'}\n2. Batch calls: one 30-minute block morning and afternoon.\n3. Record the walk-around with narration. The CRM writes the report and options, which saves about an hour each.\n4. Use the mic button for tasks and notes instead of typing.\n5. Leave the last 15 minutes to book tomorrow's inspections on the Calendar.`;
+  if(/first|today|start|priorit/.test(qq))return `${lp?`First: send the ${lp} late proposal${lp>1?'s':''}. Every hour late cuts the close rate.\n`:''}${lt?`Next: knock out the ${lt} overdue task${lt>1?'s':''}, reddest circle first.\n`:''}Then call anyone who opened a proposal but hasn't signed, and book inspections for new leads within the day. Open Pipeline and sort by days quiet to find who's slipping.`;
+  if(/think about|objection|price|expensive|cost|cheaper|other bid|quote/.test(qq))return `1. Agree first: "Totally fair, it's a big decision."\n2. Find the real worry: "Is it the price, the timing, or whether we're the right roofer?"\n3. Price: walk them down to the good option, or offer financing so it's a monthly number.\n4. Other bids: compare scope line by line (underlayment, ice and water, ventilation, warranty), not just the total.\n5. Set a follow-up time before you leave, then let the day-5 follow-up do its job.`;
+  if(/60|minute|fast|proposal|quick/.test(qq))return `1. Record the walk-around video with narration while you're on the roof.\n2. Tap Create Roofly report on the job before you leave the driveway. It builds the findings and priced options.\n3. Check the 3 options, then tap Send to client (text is fastest).\n4. The clock ring on the job shows the time left.${sent?` This week: ${on} of ${sent} on time.`:''}`;
+  return `Good question. Here's the short version: proposals within 60 minutes, reddest circle first, 3 options every time, and follow up day 5 and 21.${tr} Ask me about closing, time, objections or proposals and I'll get specific with your numbers.`}

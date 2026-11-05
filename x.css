@@ -85,3 +85,22 @@ body.ro .sw,body.ro label.b,body.ro #micBtn,body.ro .acts .chip{display:none!imp
 html.daymode #csheet .pn{background:rgba(255,255,255,.98);border-color:rgba(15,23,42,.1)}
 html.daymode .prize{background:linear-gradient(135deg,rgba(15,157,99,.1),rgba(183,121,31,.08));border-color:rgba(15,157,99,.3)}
 body.ro #rfmBtn{display:none!important}
+/* Talk to Clover */
+.clvbtn{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 8px;padding:8px 12px 8px 8px;border-radius:999px;background:var(--panel);border:1px solid var(--border2);color:var(--text);text-align:left;cursor:pointer;font:inherit}
+.clvcoin{flex:none;width:80px;height:80px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,rgba(184,245,106,.35),rgba(23,182,115,.15) 70%);border:2px solid rgba(126,232,180,.6);box-shadow:0 0 18px rgba(126,232,180,.25);animation:hop 2.6s ease-in-out 1}
+.clvcoin img{width:56px;height:65px}
+.clvtx{display:flex;flex-direction:column;min-width:0}.clvtx b{font:700 16px Inter;letter-spacing:-.02em}.clvtx small{font-size:12px;color:var(--muted);margin-top:2px}
+.clvbtn:active .clvcoin{transform:scale(.95)}
+@media (prefers-reduced-motion:reduce){.clvcoin{animation:none}}
+#clsheet{position:fixed;inset:0;z-index:97;display:none;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#clsheet.on{display:flex;align-items:flex-end;justify-content:center}
+#clsheet .pn{width:100%;max-width:560px;height:86vh;display:flex;flex-direction:column;background:rgba(20,24,34,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px 22px 0 0;padding:12px 14px calc(12px + env(safe-area-inset-bottom))}
+html.daymode #clsheet .pn{background:rgba(255,255,255,.98);border-color:rgba(15,23,42,.1)}
+.clvhd{display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.clvmsgs{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:10px 0}
+.clvm{max-width:86%;padding:9px 12px;border-radius:16px;white-space:pre-wrap;font-size:14px;line-height:1.4}
+.clvm.c{align-self:flex-start;background:var(--panel2);border:1px solid var(--border2);border-bottom-left-radius:4px}
+.clvm.u{align-self:flex-end;background:rgba(126,232,180,.18);border:1px solid rgba(126,232,180,.4);border-bottom-right-radius:4px}
+.clvchips{display:flex;gap:6px;overflow-x:auto;padding:6px 0;flex:none;scrollbar-width:none}.clvchips::-webkit-scrollbar{display:none}
+.clvchips .b{flex:none;white-space:nowrap}
+.clvin{display:flex;gap:8px;flex:none;padding-top:6px}.clvin input{min-width:0;font-size:16px}
