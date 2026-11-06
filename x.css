@@ -112,3 +112,5 @@ html.daymode #clsheet .pn{background:rgba(255,255,255,.98);border-color:rgba(15,
 #vidsheet video{width:100%;flex:1 1 auto;min-height:0;max-height:calc(100dvh - 150px);object-fit:contain;background:#06080c;border-radius:14px;aspect-ratio:9/16}
 #vidsheet .s{text-align:center;color:var(--muted,#9aa59a)}
 html.daymode #vidsheet .pn{background:rgba(255,255,255,.98);border-color:rgba(15,23,42,.1)}
+
+.trgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}.trgrid .feat{margin-top:0}

@@ -32,11 +32,12 @@ function canEdit(){return !document.body.classList.contains('ro')}
 const Stats=guard(async()=>{status('Crunching…');const s=await loadStats(true);status('Stats · this week');
   const net=(+s.saved_min||0)-(+s.behind_min||0),mins=s.minutes||{};const board=(s.board||[]).map(b=>({...b,score:(+b.done||0)+3*(+b.sent||0)+5*(+b.ontime||0)})).sort((a,b)=>b.score-a.score);
   const lib=Array.isArray(s.training)?s.training:[];
-  const T=tips(s);window._tips=T;window._tipI=0;const feat=lib.find(x=>x.featured)||lib.find(x=>/video/i.test(x.kind||''));
+  const T=tips(s);window._tips=T;window._tipI=0;
   V.innerHTML=`${cloverBtnHTML()}<div class="card coach"><img class="mascot" src="img/clvr.svg?v=matte1" alt="Clvr, the four-leaf clover sales coach" width="96" height="112">
    <div class="bubble"><div class="k">Clvr says</div><div class="t" id="tipH">${esc(T[0].h)}</div><div class="s" id="tipB" style="color:var(--text);margin-top:4px">${esc(T[0].b)}</div>
    ${T.length>1?`<button class="b sm keep" style="margin-top:8px" onclick="nextTip()">Next tip ›</button>`:''}</div></div>
-  ${feat?`<a class="card feat" href="${esc(feat.url)}" target="_blank" rel="noopener" onclick="return playTraining(${lib.indexOf(feat)})"><span class="play" aria-hidden="true">▶</span><div class="grow"><div class="k">Start here</div><div class="t">${esc(feat.title)}</div><div class="s">${esc(feat.kind||'Video')} · ${isMp4(feat.url)?'plays right here':/drive\.google/.test(feat.url)?'opens in Google Drive':'opens in a new tab'}</div></div></a>`:''}
+  ${(()=>{const vids=lib.map((x,i)=>({x,i})).filter(o=>isMp4(o.x.url)||/video/i.test(o.x.kind||''));if(!vids.length)return '';
+    return `<h2 style="margin-top:12px">Sales training <span class="n">pick any</span></h2><div class="trgrid">${vids.map(({x,i})=>`<a class="card feat" href="${esc(x.url)}" target="_blank" rel="noopener" onclick="return playTraining(${i})"><span class="play" aria-hidden="true">▶</span><div class="grow"><div class="t">${esc(x.title)}</div><div class="s">${esc(x.kind||'Video')}</div></div></a>`).join('')}</div>`})()}
   <div class="card" style="margin-top:8px"><div class="k">This week</div>
    <div class="stk"><div><b class="up">▲ ${hm(s.saved_min)}</b><span>saved by the CRM</span></div><div><b class="dn">▼ ${hm(s.behind_min)}</b><span>behind on proposals</span></div><div><b class="${net>=0?'up':'dn'}">${net>=0?'+':'−'}${hm(net)}</b><span>net</span></div></div>
    <div class="s" style="margin-top:8px">Saved = ${s.proposals_week} proposals × ${mins.proposal||45}m + ${s.reports_week} video reports × ${mins.report||60}m + ${s.auto_tasks_week} automatic follow-ups × ${mins.auto_task||5}m + ${s.tasks_done_week} tasks done × ${mins.task_done||3}m. Behind = how far past the 60-minute clock the open proposals are (max 24h each). These are estimates.</div></div>
@@ -49,7 +50,7 @@ const Stats=guard(async()=>{status('Crunching…');const s=await loadStats(true)
    <div class="btns"><button class="b f keep" onclick="optBoard(${!s.me_on_board})">${s.me_on_board?'Leave the leaderboard':'Join the leaderboard'}</button></div>
    <div class="s" style="margin-top:6px">Score = tasks done + 3 per proposal sent + 5 per proposal sent within 60 minutes.</div></div>
 
-  <h2>Sales training <span class="n">${lib.length}</span></h2>
+  <h2>Training library <span class="n">${lib.length}</span></h2>
   <div class="stack">${lib.map((x,i)=>`<div class="card row"><div class="grow"><div class="t">${esc(x.title)}</div><div class="s">${esc(x.kind||'Link')}</div></div><a class="b sm keep" href="${esc(x.url)}" target="_blank" rel="noopener" onclick="return playTraining(${i})">${isMp4(x.url)?'▶ Watch':'Open'}</a>${canEdit()?`<button class="b sm ic" aria-label="Remove" onclick="delTraining(${i})">✕</button>`:''}</div>`).join('')||'<div class="card empty">No training added yet.</div>'}</div>
   ${canEdit()?`<div class="card" style="margin-top:8px"><label class="f" style="margin-top:0">Add a training doc or video</label><input type="text" id="trt" placeholder="Title, e.g. Closing on the first visit"><div class="grid2"><div><input type="url" id="tru" placeholder="https://…" style="margin-top:6px"></div><div><select id="trk" style="margin-top:6px"><option>Video</option><option>Doc</option><option>Script</option><option>Course</option></select></div></div><div class="btns"><button class="b p f" onclick="addTraining()">Add to training</button></div></div>`:''}`});
 function isMp4(u){return /\.mp4(\?|$)/i.test(u||'')}
