@@ -6,7 +6,7 @@ window.afterJob=async d=>{const box=$('#jobx');if(!box)return;const j=d.job,c=d.
   /* 1. proposal link + e-sign */
   let prop='';
   if(x.signature){const g=x.signature;prop=`<div class="card" style="border-color:rgba(126,232,180,.55);background:rgba(126,232,180,.1)"><div class="row"><div class="grow"><div class="t">Signed by ${esc(g.name)}</div><div class="s">${esc(fmtDue(g.at))} · ${esc(g.option||'')} · ${money(g.total)}</div></div><span class="pill green">Approved</span></div>${g.png?`<img alt="Signature" src="${esc(g.png)}" style="width:100%;max-width:320px;background:#fff;border-radius:10px;margin-top:8px;display:block">`:''}
-    <div class="btns"><button class="b p f" onclick="newInvoice('${j.id}','deposit')">${XI.inv}Deposit invoice (50%)</button><a class="b f" target="_blank" rel="noopener" href="${x.link?PORTAL_BASE+'proposal.html?t='+x.link.token:'#'}">View signed proposal</a></div></div>`}
+    <div class="btns"><button class="b p f" onclick="newInvoice('${j.id}','deposit')">${XI.inv}Deposit invoice (50%)</button><a class="b f" target="_blank" rel="noopener" href="${x.link?propUrl(x.link.token):'#'}">View signed proposal</a></div></div>`}
   /* unsigned: the Proposal card at the top of the job handles Create Roofly report → Send to client → View proposal */
   /* 2. schedule */
   const st=j.scheduled_start?new Date(j.scheduled_start):null;const stD=st?dISO(st):'',stT=st?tmLocal(st):'7:30 AM';const days=st&&j.scheduled_end?Math.max(1,Math.round((new Date(j.scheduled_end)-st)/864e5)||1):1;
@@ -40,14 +40,14 @@ window.afterJob=async d=>{const box=$('#jobx');if(!box)return;const j=d.job,c=d.
 
 function canEditJob(){return !document.body.classList.contains('ro')}
 /* proposal link */
-window.propLink=async jid=>{const d=cache.job,j=d.job,c=d.contact||{};const r=await sql(`select crm.portal_link('proposal',${q(jid)}) as t`);const url=PORTAL_BASE+'proposal.html?t='+r[0].t;
+window.propLink=async jid=>{const d=cache.job,j=d.job,c=d.contact||{};const r=await sql(`select crm.portal_link('proposal',${q(jid)}) as t`);const url=propUrl(r[0].t);
   const first=(c.name||'there').split(/[ (—]/)[0];const body=`Hi ${first}, here's your Lucky Line Roofing proposal${j.address?' for '+j.address:''}. You can look over the options and sign right on your phone:\n${url}\n\nAny questions, just call or text. — Justin, 406-609-9950`;
   const sent=()=>{if(!j.proposal_sent_at){j.proposal_sent_at=new Date().toISOString();setTimeout(()=>markSent(jid),1200)}};window._propSent=sent;
   $('#plink').innerHTML=`<code class="lk">${esc(url)}</code><div class="btns" style="width:100%">${(c.phones||[])[0]?`<a class="b p f" href="${esc(smsHref(c.phones[0],body))}" onclick="_propSent();logOut('${c.id||''}','${jid}',${esc(JSON.stringify(body))})">${ICON.text}Text it</a>`:''}${(c.emails||[])[0]?(mcp?`<button class="b f" onclick="gmailLink('${jid}',${esc(JSON.stringify(body))})">${ICON.mail}Gmail draft</button>`:`<a class="b f" href="${esc(mailHref(c.emails[0],'Your roof proposal from Lucky Line Roofing',body))}" onclick="_propSent()">${ICON.mail}Email it</a>`):''}<button class="b f" onclick="copyText(${esc(JSON.stringify(url))},'Link copied');_propSent()">Copy</button><a class="b f" href="${esc(url)}" target="_blank" rel="noopener">Preview</a></div>`};
 window.sendClient=async jid=>{const d=cache.job,j=d.job,c=d.contact||{};let sh=$('#nsheet');if(!sh){sh=document.createElement('div');sh.id='nsheet';sh.setAttribute('role','dialog');sh.setAttribute('aria-modal','true');sh.onclick=e=>{if(e.target===sh)closeNotes()};document.body.appendChild(sh)}
   const first=(c.name||'there').split(/[ (—]/)[0];
   sh.innerHTML='<div class="pn" role="dialog" aria-modal="true" aria-label="Send proposal"><div class="hd"><div class="t">Making the link…</div><button class="b sm keep" onclick="closeNotes()">Close</button></div></div>';sh.classList.add('on');document.body.style.overflow='hidden';
-  try{const r=await sql(`select crm.portal_link('proposal',${q(jid)}) as t`);const url=PORTAL_BASE+'proposal.html?t='+r[0].t;
+  try{const r=await sql(`select crm.portal_link('proposal',${q(jid)}) as t`);const url=propUrl(r[0].t);
     const body=`Hi ${first}, here's your Lucky Line Roofing proposal${j.address?' for '+j.address:''}. You can look over the options and sign right on your phone:\n${url}\n\nAny questions, just call or text. — Justin, 406-609-9950`;
     window._propSent=()=>{if(!j.proposal_sent_at){j.proposal_sent_at=new Date().toISOString();setTimeout(()=>{closeNotes();markSent(jid)},1200)}};
     const ph=(c.phones||[])[0],em=(c.emails||[])[0];

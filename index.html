@@ -468,7 +468,7 @@ const STAGES=['Lead','Inspection','Proposal Due','Proposal Sent','Approved','Sch
 let pipeFilter='Hot';
 const Pipeline=guard(async()=>{status('Syncing…');const rows=await fn('crm.app_pipeline()');cache.pipe=rows;status(rows.length+' open deals');drawPipe()});
 let pipeQ='';
-window.propUrl=t=>(window.PORTAL_BASE||'https://nomadishere.github.io/lucky-line-crm/')+'proposal.html?t='+t;
+window.propUrl=t=>window.BRAND==='CLVR'?'https://clvrcrm.com/proposal/?t='+t:(window.PORTAL_BASE||'https://nomadishere.github.io/lucky-line-crm/')+'proposal.html?t='+t;
 window.openProp=(e,t)=>{if(e){e.preventDefault();e.stopPropagation()}window.open(propUrl(t),'_blank','noopener')};
 window.propBtn=(t,cls)=>t?`<button type="button" class="b sm keep vp ${cls||''}" onclick="openProp(event,'${t}')">${ICON.doc||''}View proposal</button>`:'';
 function pipeCard(r){return `<a class="card" style="display:block" href="#job-${r.id}"><div class="row"><div class="grow"><div class="t">${esc(r.title)}</div><div class="s">${esc(r.contact||'')} · ${esc(r.stage)}${r.value?' · $'+Number(r.value).toLocaleString():''}</div></div></div>
@@ -590,7 +590,7 @@ const Job=guard(async id=>{status('Loading…');const [d,ests]=await Promise.all
     <div class="sec">${d.notes.map(n=>`<div class="note"><div class="s">${esc(n.kind)} · ${esc(fmtDue(n.happened_at))}${n.author?' · '+esc(n.author):''}</div><div class="cl3" data-label="${esc(n.kind)} note" style="white-space:pre-wrap">${esc(n.body)}</div></div>`).join('')||'<div class="empty">Nothing logged yet.</div>'}</div></div>
   ${d.other_jobs.length?`<h2>Other jobs</h2><div class="stack">${d.other_jobs.map(o=>`<a class="card" style="display:block" href="#job-${o.id}"><div class="t">${esc(o.title)}</div><div class="s">${esc(o.stage)}</div></a>`).join('')}</div>`:''}`;
   startClocks();if(window.afterJob)afterJob(d);
-  sql(`select crm.roofly_code(${q(j.id)}) as c`).then(r=>{document.querySelectorAll('.rfl').forEach(b=>{if(r[0])b.href=roofly(j,c,r[0].c)})}).catch(()=>{});
+  sql(`select crm.roofly_code(${q(j.id)}) as c`).then(r=>{document.querySelectorAll('.rfl').forEach(b=>{if(r[0]&&!b.dataset.rep)b.href=roofly(j,c,r[0].c)})}).catch(()=>{});
   sql(`select token,views,last_viewed_at from crm.portal_links where kind='proposal' and job_id=${q(j.id)} and not revoked and expires_at>now() order by created_at desc limit 1`).then(r=>{const l=r[0];const box=$('#propView');if(!box)return;
     if(l){box.innerHTML=`<a class="b big keep" href="${esc(propUrl(l.token))}" target="_blank" rel="noopener">${ICON.doc}View proposal</a><div class="s" style="margin-top:6px;text-align:center">${l.views?'Customer opened it '+l.views+' time'+(l.views>1?'s':'')+' · last '+esc(fmtDue(l.last_viewed_at)):'Customer hasn\'t opened it yet'}</div>`}
     else if(j.proposal_sent_at){box.innerHTML='<div class="s" style="margin-top:8px">Marked sent '+esc(fmtDue(j.proposal_sent_at))+' outside the app (email or text). No customer page was made.</div>'}}).catch(()=>{})});
@@ -598,7 +598,7 @@ function propSteps(j,c,d){const ests=d.estimates||[],rf=(d.inspections||[]).find
   const s1=hasRep||ests.length?'done':'now',s2=sent?'done':(ests.length?'now':'');
   return `<div class="card" style="margin-top:8px" id="propCard"><div class="row"><div class="t grow" style="font-size:16px">Proposal</div><span class="pill ${signed?'green':sent?'':'amber'}">${signed?'Signed':sent?'Sent':ests.length?'Ready to send':'Not started'}</span></div>
    <div class="step ${s1}"><div class="n">${s1==='done'?'✓':'1'}</div><div class="grow"><div class="t" style="font-size:14px">${hasRep?'Roofly report done':'Create the Roofly report'}</div><div class="s">${hasRep?(ests.length?ests.length+' priced option'+(ests.length>1?'s':'')+' saved below.':'Report is in. Add the priced options in Roofly or below.'):'Photos, findings and priced options. It all saves back to this job.'}</div>
-     <a class="b ${s1==='now'?'p big':'f'} rfl" id="rflBtn" style="margin-top:8px${s1==='now'?'':';width:100%'}" href="${roofly(j,c,'')}" target="_blank" rel="noopener">${ICON.video}${hasRep?'Open Roofly report':'Create Roofly report'}</a>${s1==='now'?`<a class="b sm" style="margin-top:6px" href="#inspect-${j.id}">or quick video instead</a>`:''}</div></div>
+     <a class="b ${s1==='now'?'p big':'f'} rfl" id="rflBtn" style="margin-top:8px${s1==='now'?'':';width:100%'}" ${rf&&rf.report_url?`data-rep="1" href="${esc(rf.report_url)}"`:`href="${roofly(j,c,'')}"`} target="_blank" rel="noopener">${ICON.video}${hasRep?'Open Roofly report':'Create Roofly report'}</a>${s1==='now'?`<a class="b sm" style="margin-top:6px" href="#inspect-${j.id}">or quick video instead</a>`:''}</div></div>
    <div class="step ${s2}"><div class="n">${s2==='done'?'✓':'2'}</div><div class="grow"><div class="t" style="font-size:14px">${sent?'Sent to client':'Send to client'}</div><div class="s">${sent?'Sent '+esc(fmtDue(j.proposal_sent_at))+'. They can pick an option and sign on their phone.':ests.length?'Text or email '+esc((c.name||'the customer').split(/[ (—]/)[0])+' a link. They pick an option and sign with a finger.':'Unlocks once the Roofly report has priced options.'}</div>
      ${ests.length?`<button class="b ${sent?'f':'p big'}" style="margin-top:8px;width:100%" onclick="sendClient('${j.id}')">${ICON.send}${sent?'Send again':'Send to client'}</button>`:''}</div></div>
    <div id="propView"></div></div>`}
@@ -712,7 +712,7 @@ addEventListener('DOMContentLoaded',async()=>{
 if('serviceWorker' in navigator&&location.protocol==='https:'&&!window.claude)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 <script src="x-core.js?v=20261105c"></script>
-<script src="x-job.js?v=20261105c"></script>
+<script src="x-job.js?v=20261109a"></script>
 <script src="x-voice.js?v=20261105c"></script>
 <script src="x-stats.js?v=20261106a"></script>
 <script src="x-signup.js?v=20261105d"></script>
